@@ -1,0 +1,4 @@
+{
+  "identifier": "fs",
+  "permissions": ["fs:default", "fs:allow-read-file", "fs:allow-stat"]
+}
