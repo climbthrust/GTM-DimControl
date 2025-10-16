@@ -1,9 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    './index.html',
-    './src/**/*.{js,jsx,ts,tsx}', // wichtig für React-Komponenten
-  ],
+  content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {},
     colors: {
@@ -12,7 +9,8 @@ export default {
       white: '#ffffff',
       black: '#000000',
 
-      'gtm-yellow': {
+      // Haupt-Akzentfarbe (ehemals gtm-yellow)
+      'gtm-accent': {
         100: '#fff7da',
         200: '#ffeaa3',
         300: '#ffd85c',
@@ -24,9 +22,10 @@ export default {
         900: '#996c16',
       },
 
+      // Neutrales Grau
       'gtm-gray': {
         100: '#f5f5f5',
-        200: '#e6e6e6', // helles Auxiliary-Grau
+        200: '#e6e6e6',
         300: '#d4d4d4',
         400: '#a3a3a3',
         500: '#737373',
@@ -36,6 +35,7 @@ export default {
         900: '#1c1c1c',
       },
 
+      // Textfarben
       'gtm-text': {
         100: '#f5f5f5',
         200: '#e6e6e6',

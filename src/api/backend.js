@@ -9,6 +9,10 @@ export async function getFirstProduct() {
   return await invoke('get_first_product');
 }
 
+export async function getDimensionsForProduct() {
+  return await invoke('get_dimensions_for_product');
+}
+
 // export async function addProduct(name, price) {
 //   return await invoke('add_product', { name, price });
 // }

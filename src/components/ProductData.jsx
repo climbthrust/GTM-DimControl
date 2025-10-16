@@ -1,47 +1,49 @@
 import React from 'react';
 import Frame from './Frame';
 
-export default function ProductData({ product }) {
-  const BASE_URL = import.meta.env.DEV
-    ? 'http://localhost:8080/product_images'
-    : 'http://gtm-fileserver/product_images';
+export default function ProductData({ product, basePath }) {
+  // Falls kein Produkt vorhanden ist → leeren Frame anzeigen
 
-  // Serie (zukünftig: product.series) – bis dahin Fallback auf part_number
-  const series = product?.series;
-  const product_type = product?.product_type;
+  console.log(basePath);
+  if (!product) {
+    return (
+      <Frame>
+        <div className='flex items-center justify-center w-full h-full text-gray-500'>
+          Kein Produkt geladen
+        </div>
+      </Frame>
+    );
+  }
 
-  // Dateiname kommt aus image_file_name
+  const { series, product_type, image_file_name, name } = product;
+
   const imgUrl =
-    series && product?.image_file_name
-      ? `${BASE_URL}/${encodeURIComponent(product_type)}/${encodeURIComponent(
-          product.image_file_name
-        )}`
+    basePath && image_file_name
+      ? `${basePath}/${encodeURIComponent(image_file_name)}`
       : null;
-
-  console.log(imgUrl);
 
   return (
     <Frame>
-      <div className='flex w-full h-full'>
+      <div className='flex w-full h-full items-start justify-between'>
         <div className='flex-grow'>
-          <h1 className='text-3xl'>{product.type}</h1>
+          <h1 className='text-3xl font-semibold mb-2'>{product_type}</h1>
           <p>
-            <b>Serie:</b> {product.series}
+            <b>Serie:</b> {series || '–'}
           </p>
           <p>
             <b>Teile-Nummer:</b> 12345678
           </p>
         </div>
 
-        <div className='w-56 h-auto border border-gtm-gray-300 flex items-center justify-center'>
+        <div className='w-56 h-auto border border-gtm-gray-300 flex items-center justify-center bg-white'>
           {imgUrl ? (
             <img
               src={imgUrl}
-              alt={product.name}
-              className='max-w-full h-auto'
+              alt={name || 'Produktbild'}
+              className='max-w-full h-auto object-contain'
             />
           ) : (
-            <p>Kein Bild</p>
+            <p className='text-gray-500'>Kein Bild</p>
           )}
         </div>
       </div>
