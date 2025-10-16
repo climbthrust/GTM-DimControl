@@ -11,7 +11,6 @@ export default function App() {
 
   async function load() {
     const p = await getFirstProduct();
-    console.log('Gescannter Datensatz:', p);
     setProduct(p);
   }
 

@@ -1,34 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Frame from './Frame';
-import { open } from '@tauri-apps/plugin-fs';
 
 export default function ProductData({ product }) {
-  const [imgUrl, setImgUrl] = useState(null);
+  const BASE_URL = import.meta.env.DEV
+    ? 'http://localhost:8080/product_images'
+    : 'http://gtm-fileserver/product_images';
 
-  useEffect(() => {
-    if (!product?.image_path) return;
+  // Serie (zukünftig: product.series) – bis dahin Fallback auf part_number
+  const series = product?.series;
+  const product_type = product?.product_type;
 
-    (async () => {
-      try {
-        const url = await toObjectUrl(product.image_path);
-        setImgUrl(url);
-      } catch (err) {
-        console.error('Fehler beim Laden des Bildes:', err);
-      }
-    })(); // ← async IIFE
+  // Dateiname kommt aus image_file_name
+  const imgUrl =
+    series && product?.image_file_name
+      ? `${BASE_URL}/${encodeURIComponent(product_type)}/${encodeURIComponent(
+          product.image_file_name
+        )}`
+      : null;
 
-    return () => {
-      if (imgUrl) URL.revokeObjectURL(imgUrl);
-    };
-  }, [product?.image_path]);
+  console.log(imgUrl);
 
   return (
     <Frame>
       <div className='flex w-full h-full'>
         <div className='flex-grow'>
-          <h1 className='text-3xl'>{product.name}</h1>
+          <h1 className='text-3xl'>{product.type}</h1>
           <p>
-            <b>Design:</b> {product.part_number}
+            <b>Serie:</b> {product.series}
           </p>
           <p>
             <b>Teile-Nummer:</b> 12345678
@@ -49,24 +47,4 @@ export default function ProductData({ product }) {
       </div>
     </Frame>
   );
-}
-
-/** Liest Datei über plugin-fs und gibt eine Blob-URL zurück */
-async function toObjectUrl(absPath) {
-  console.log('🔍 Lade Bild:', absPath);
-  const file = await open(absPath, { read: true });
-  const stat = await file.stat();
-  const buf = new Uint8Array(stat.size);
-  await file.read(buf);
-  await file.close();
-
-  const lower = absPath.toLowerCase();
-  const mime = lower.endsWith('.png')
-    ? 'image/png'
-    : lower.endsWith('.webp')
-    ? 'image/webp'
-    : 'image/jpeg';
-
-  const blob = new Blob([buf], { type: mime });
-  return URL.createObjectURL(blob);
 }
