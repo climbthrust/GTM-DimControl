@@ -13,6 +13,10 @@ export async function getDimensionsForProduct() {
   return await invoke('get_dimensions_for_product');
 }
 
+export async function loadAllMeasurementTools() {
+  return await invoke('load_all_measurement_tools');
+}
+
 // export async function addProduct(name, price) {
 //   return await invoke('add_product', { name, price });
 // }

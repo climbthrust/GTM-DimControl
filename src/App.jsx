@@ -6,11 +6,22 @@ import Dimensions from './components/Dimensions';
 export default function App() {
   const [product, setProduct] = useState(null);
   const [dimensions, setDimensions] = useState([]);
-  const [basePath, setBasePath] = useState('');
+  const [measurementTools, setMeasurementTools] = useState([]);
 
   useEffect(() => {
     loadProductAndDimensions();
+    loadAllMeasurementTools();
   }, []);
+
+  async function loadAllMeasurementTools() {
+    try {
+      const tools = await invoke('load_all_measurement_tools');
+      setMeasurementTools(tools);
+      console.log('Tools geladen:', tools);
+    } catch (err) {
+      console.error('Fehler beim Laden der Measurement Tools:', err);
+    }
+  }
 
   async function loadProductAndDimensions(productId) {
     try {
@@ -30,29 +41,30 @@ export default function App() {
         productId: prod.id,
       });
 
-      const BASE_URL = import.meta.env.VITE_BASE_IMAGE_URL;
-
-      // Sicherstellen, dass product_type existiert
-      const safeType = prod.product_type
-        ? encodeURIComponent(prod.product_type)
-        : '';
-      const path = BASE_URL && safeType ? `${BASE_URL}/${safeType}` : '';
-
       setProduct(prod);
       setDimensions(dims);
-      setBasePath(path);
     } catch (err) {
       console.error('Fehler beim Laden:', err);
       setProduct(null);
       setDimensions([]);
-      setBasePath('');
     }
   }
 
   return (
-    <div className='p-4 grid grid-rows-2 gap-4 w-screen h-screen'>
-      <ProductData product={product} basePath={basePath} />
-      <Dimensions dimensions={dimensions} basePath={basePath} />
+    <div
+      className='flex flex-col w-screen h-screen gap-4
+                bg-gtm-gray-900 text-gtm-text-100 font-sans
+                selection:bg-gtm-accent-400 selection:text-gtm-text-900'
+    >
+      <div className='flex-[1] min-h-0'>
+        <ProductData product={product} />
+      </div>
+      <div className='flex-[2] min-h-0'>
+        <Dimensions
+          dimensions={dimensions}
+          measurementTools={measurementTools}
+        />
+      </div>
     </div>
   );
 }

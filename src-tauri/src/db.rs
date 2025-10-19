@@ -29,6 +29,7 @@ pub struct Product {
     pub series: String,
     pub product_type: String,
     pub image_file_name: String,
+    pub notes: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -40,11 +41,23 @@ pub struct Dimension {
     pub tol_plus: f64,
     pub tol_minus: f64,
     pub unit: String,
-    pub inspection_tool: Option<String>,
+    pub measurement_tool_id: Option<i32>,
     pub admin_note: Option<String>,
     pub user_note: Option<String>,
     pub created_at: Option<String>,
     pub updated_at: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct MeasurementTool {
+    pub id: i32,
+    pub name: String,
+    pub bluetooth_id: Option<String>,
+    pub device_type: Option<String>,
+    pub calibration_date: Option<String>,
+    pub valid_until: Option<String>,
+    pub notes: Option<String>,
+    pub image_file_name: Option<String>,
 }
 
 #[tauri::command]
@@ -53,7 +66,7 @@ pub fn get_first_product() -> Result<Product, String> {
 
     let mut stmt = conn
         .prepare(
-            "SELECT id, name, series, product_type, image_file_name 
+            "SELECT id, name, series, product_type, image_file_name, notes 
              FROM products 
              ORDER BY id ASC LIMIT 1",
         )
@@ -67,6 +80,7 @@ pub fn get_first_product() -> Result<Product, String> {
                 series: row.get(2)?,
                 product_type: row.get(3)?,
                 image_file_name: row.get(4)?,
+                notes: row.get(5)?,
             })
         })
         .map_err(|e| e.to_string())?;
@@ -92,7 +106,7 @@ pub fn get_dimensions_for_product(product_id: i32) -> Result<Vec<Dimension>, Str
                 tol_plus,
                 tol_minus,
                 unit,
-                inspection_tool,
+                measurement_tool_id,
                 admin_note,
                 user_note,
                 created_at,
@@ -113,7 +127,7 @@ pub fn get_dimensions_for_product(product_id: i32) -> Result<Vec<Dimension>, Str
                 tol_plus: row.get(4)?,
                 tol_minus: row.get(5)?,
                 unit: row.get(6)?,
-                inspection_tool: row.get(7).ok(),
+                measurement_tool_id: row.get(7).ok(),
                 admin_note: row.get(8).ok(),
                 user_note: row.get(9).ok(),
                 created_at: row.get(10).ok(),
@@ -136,3 +150,35 @@ pub fn get_dimensions_for_product(product_id: i32) -> Result<Vec<Dimension>, Str
         Ok(dimensions)
     }
 }
+
+#[tauri::command]
+pub fn load_all_measurement_tools() -> Result<Vec<MeasurementTool>, String> {
+    let conn = DB_CONN.lock().unwrap();
+
+    let mut stmt = conn
+        .prepare("SELECT id, name, bluetooth_id, device_type, calibration_date, valid_until, notes, image_file_name FROM measurement_tools ORDER BY name ASC;")
+        .map_err(|e| e.to_string())?;
+
+    let iter = stmt
+        .query_map([], |row| {
+            Ok(MeasurementTool {
+                id: row.get(0)?,
+                name: row.get(1)?,
+                bluetooth_id: row.get(2)?,
+                device_type: row.get(3)?,
+                calibration_date: row.get(4)?,
+                valid_until: row.get(5)?,
+                notes: row.get(6)?,
+                image_file_name: row.get(7)?,
+            })
+        })
+        .map_err(|e| e.to_string())?;
+
+    let mut tools = Vec::new();
+    for t in iter {
+        tools.push(t.map_err(|e| e.to_string())?);
+    }
+
+    Ok(tools)
+}
+
