@@ -42,50 +42,56 @@ const MeasurementTool = ({
   }
 
   return (
-    <div className='w-full h-auto p-3 text-lg text-gtm-gray-300 rounded-md border border-gtm-gray-700 bg-gtm-gray-800 flex gap-4 items-center'>
+    <div className='w-full h-full p-3 text-lg text-gtm-gray-300 rounded-md border border-gtm-gray-700 bg-gtm-gray-800 flex flex-col gap-4 items-center'>
+      <div className='text-xl font-semibold'>{name || '–'}</div>
+      <div className='flex w-full h-full items-center gap-4'>
+        <div className='flex flex-col items-start justify-center gap-2'>
+          <div className='flex items-center gap-2'>
+            {/* Bluetooth Status Icon */}
+            {btStatus === 'correct' && (
+              <Bluetooth className='w-5 h-5 text-gtm-blue-500' />
+            )}
+            {btStatus === 'wrong' && (
+              <Bluetooth className='w-5 h-5 text-gtm-fail-500' />
+            )}
+            {btStatus === 'none' && (
+              <BluetoothOff className='w-5 h-5 text-gtm-fail-500' />
+            )}
+          </div>
+
+          {/* Kalibrierung */}
+          <div className='flex items-center gap-2'>
+            {isValid ? (
+              <CheckCircle className='w-4 h-4 text-gtm-ok-500' />
+            ) : (
+              <AlertCircle className='w-4 h-4 text-gtm-fail-500' />
+            )}
+            <span
+              className={`font-medium text-sm ${
+                isValid ? 'text-gtm-ok-500' : 'text-gtm-fail-500'
+              }`}
+            >
+              {valid_until ? `${valid_until}` : '–'}
+            </span>
+          </div>
+
+          {/* optional: Notes */}
+          {notes && (
+            <div className='text-sm text-gtm-gray-400 italic'>{notes}</div>
+          )}
+        </div>
+
+        {/* rechte Seite: Bild */}
+        <div className='flex-grow'>
+          <GTMImage
+            width='w-full'
+            imgUrl={imgUrl}
+            name={name}
+            bordered={false}
+          />
+        </div>
+      </div>
       {/* linke Seite: Info */}
-      <div className='flex flex-col w-1/2 items-start justify-center gap-2'>
-        <div className='flex items-center gap-2'>
-          <span className='text-xl font-semibold'>{name || '–'}</span>
-
-          {/* Bluetooth Status Icon */}
-          {btStatus === 'correct' && (
-            <Bluetooth className='w-5 h-5 text-gtm-blue-500' />
-          )}
-          {btStatus === 'wrong' && (
-            <Bluetooth className='w-5 h-5 text-gtm-fail-500' />
-          )}
-          {btStatus === 'none' && (
-            <BluetoothOff className='w-5 h-5 text-gtm-fail-500' />
-          )}
-        </div>
-
-        {/* Kalibrierung */}
-        <div className='flex items-center gap-2'>
-          {isValid ? (
-            <CheckCircle className='w-4 h-4 text-gtm-ok-500' />
-          ) : (
-            <AlertCircle className='w-4 h-4 text-gtm-fail-500' />
-          )}
-          <span
-            className={`font-medium ${
-              isValid ? 'text-gtm-ok-500' : 'text-gtm-fail-500'
-            }`}
-          >
-            {valid_until ? `gültig bis ${valid_until}` : '–'}
-          </span>
-        </div>
-
-        {/* optional: Notes */}
-        {notes && (
-          <div className='text-sm text-gtm-gray-400 italic'>{notes}</div>
-        )}
-      </div>
-
-      {/* rechte Seite: Bild */}
-      <div className='w-1/2'>
-        <GTMImage width='w-full' imgUrl={imgUrl} name={name} bordered={false} />
-      </div>
     </div>
   );
 };

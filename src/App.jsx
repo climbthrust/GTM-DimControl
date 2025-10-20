@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { invoke } from '@tauri-apps/api/core';
-import ProductData from './components/ProductData';
-import Dimensions from './components/Dimensions';
+import ProductPage from './pages/ProductPage';
 
 export default function App() {
+  // const [page, setPage] = useState('product');
   const [product, setProduct] = useState(null);
   const [dimensions, setDimensions] = useState([]);
   const [measurementTools, setMeasurementTools] = useState([]);
@@ -50,21 +50,26 @@ export default function App() {
     }
   }
 
+  // const goToMeasurement = () => setPage('measurement');
+  // const goToProduct = () => setPage('product');
+
+  // if (page === 'measurement') {
+  //   return (
+  //     <MeasurementPage
+  //       dimensions={dimensions}
+  //       setDimensions={setDimensions}
+  //       measurementTools={measurementTools}
+  //       onBack={goToProduct}
+  //     />
+  //   );
+  // }
+
   return (
-    <div
-      className='flex flex-col w-screen h-screen gap-4
-                bg-gtm-gray-900 text-gtm-text-100 font-sans
-                selection:bg-gtm-accent-400 selection:text-gtm-text-900'
-    >
-      <div className='flex-[1] min-h-0'>
-        <ProductData product={product} />
-      </div>
-      <div className='flex-[2] min-h-0'>
-        <Dimensions
-          dimensions={dimensions}
-          measurementTools={measurementTools}
-        />
-      </div>
-    </div>
+    <ProductPage
+      product={product}
+      dimensions={dimensions}
+      measurementTools={measurementTools}
+      // gotoMeasurement={goToMeasurement}
+    />
   );
 }
