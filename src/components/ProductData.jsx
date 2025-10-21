@@ -4,6 +4,7 @@ import GTMImage from './GTMImage';
 import Notes from './Notes';
 
 export default function ProductData({ product }) {
+  // product = null;
   if (!product) {
     return (
       <Frame>
