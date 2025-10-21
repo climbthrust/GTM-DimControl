@@ -56,14 +56,14 @@ export default function MeasurementFrame({
   };
 
   return (
-    <div className='flex w-full gap-4'>
+    <div className='flex w-full h-56 gap-4'>
       <div className='flex flex-col justify-center flex-1 p-4 border border-gtm-gray-700 rounded-md bg-gtm-gray-900'>
         <h2 className='text-4xl font-semibold mb-6 text-center text-gtm-text-100'>
           {dim.name}
         </h2>
 
         <div className='flex w-full justify-between items-center max-w-3xl mx-auto'>
-          <div className='text-center'>
+          <div className='flex-grow text-center'>
             <p className='text-2xl text-gtm-text-200'>
               Soll: {dim.nominal.toFixed(displayDecimals)} {dim.unit}
             </p>
@@ -73,25 +73,27 @@ export default function MeasurementFrame({
             </p>
           </div>
 
-          <input
-            type='number'
-            inputMode='decimal'
-            step={step}
-            value={currentValue}
-            onChange={e => setCurrentValue(e.target.value)}
-            onBlur={handleBlur}
-            onKeyDown={handleKeyDown}
-            className='text-4xl text-center bg-white text-gtm-text-900 px-6 py-3 rounded-lg w-56 focus:outline-none focus:ring-4 focus:ring-gtm-accent-400'
-            placeholder='Ist-Wert'
-            autoFocus
-          />
+          <div className='flex gap-4'>
+            <input
+              type='number'
+              inputMode='decimal'
+              step={step}
+              value={currentValue}
+              onChange={e => setCurrentValue(e.target.value)}
+              onBlur={handleBlur}
+              onKeyDown={handleKeyDown}
+              className='text-4xl text-center bg-white text-gtm-text-900 px-6 py-3 rounded-lg w-56 focus:outline-none focus:ring-4 focus:ring-gtm-accent-400'
+              placeholder='Ist-Wert'
+              autoFocus
+            />
 
-          <button
-            onClick={handleConfirm}
-            className='text-xl px-6 py-3 rounded-lg transition-colors bg-gtm-accent-500 hover:bg-gtm-accent-400 text-gtm-text-900'
-          >
-            Weiter
-          </button>
+            <button
+              onClick={handleConfirm}
+              className='text-xl px-6 py-3 rounded-lg transition-colors bg-gtm-accent-500 hover:bg-gtm-accent-400 text-gtm-text-900'
+            >
+              Weiter
+            </button>
+          </div>
         </div>
       </div>
 

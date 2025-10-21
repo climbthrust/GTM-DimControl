@@ -1,0 +1,14 @@
+// eslint.config.js
+import js from '@eslint/js';
+import pluginTailwind from 'eslint-plugin-tailwindcss';
+import { defineConfig } from 'eslint/config';
+
+export default defineConfig([
+  js.configs.recommended,
+  pluginTailwind.configs['flat/recommended'],
+  {
+    rules: {
+      'no-unused-vars': 'warn',
+    },
+  },
+]);
