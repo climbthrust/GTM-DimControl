@@ -4,7 +4,9 @@ import {
   BluetoothOff,
   CheckCircle,
   AlertCircle,
+  SquarePen,
 } from 'lucide-react';
+import Notes from './Notes';
 import GTMImage from './GTMImage';
 
 const MeasurementTool = ({ tool, connectedDeviceId }) => {
@@ -39,70 +41,88 @@ const MeasurementTool = ({ tool, connectedDeviceId }) => {
   }
 
   // --- Bluetooth-Status ---
-  let btStatus = 'none'; // none | correct | wrong
-  if (connectedDeviceId) {
-    btStatus = connectedDeviceId === bluetooth_id ? 'correct' : 'wrong';
-  }
+  let btStatus = 'correct'; // none | correct | wrong
+  // if (connectedDeviceId) {
+  //   btStatus = connectedDeviceId === bluetooth_id ? 'correct' : 'wrong';
+  // }
 
   return (
-    <div className='w-full h-full p-3 text-lg text-gtm-gray-300 rounded-md border border-gtm-gray-700 bg-gtm-gray-800 flex flex-col gap-4 items-center'>
-      {/* Name */}
-      <div className='text-xl font-semibold'>{name || '–'}</div>
-
-      {/* Hauptbereich */}
-      <div className='flex w-full h-full items-center gap-4'>
-        {/* linke Seite: Status */}
-        <div className='flex flex-col items-start justify-center gap-2 min-w-[120px]'>
-          {/* Bluetooth Status */}
-          <div className='flex items-center gap-2'>
-            {btStatus === 'correct' && (
-              <Bluetooth className='w-5 h-5 text-gtm-blue-500' />
-            )}
-            {btStatus === 'wrong' && (
-              <Bluetooth className='w-5 h-5 text-gtm-fail-500' />
-            )}
-            {btStatus === 'none' && (
-              <BluetoothOff className='w-5 h-5 text-gtm-fail-500' />
-            )}
-            <span className='text-sm'>
-              {btStatus === 'correct'
-                ? 'Verbunden'
-                : btStatus === 'wrong'
-                ? 'Falsches Gerät'
-                : 'Keine Verbindung'}
-            </span>
+    <div className='relative w-full h-full text-lg text-gtm-gray-300 rounded-sm border border-gtm-gray-700 flex flex-col items-center gap-2'>
+      {tool ? (
+        <div className='fex flex-col h-full w-full items-center p-2'>
+          <div className='text-xl text-center font-semibold mb-2'>
+            {name || '–'}
           </div>
 
-          {/* Kalibrierung */}
-          <div className='flex items-center gap-2'>
-            {isValid ? (
-              <CheckCircle className='w-4 h-4 text-gtm-ok-500' />
-            ) : (
-              <AlertCircle className='w-4 h-4 text-gtm-fail-500' />
-            )}
-            <span
-              className={`font-medium text-sm ${
-                isValid ? 'text-gtm-ok-500' : 'text-gtm-fail-500'
-              }`}
-            >
-              {valid_until || '–'}
-            </span>
-          </div>
-
-          {/* optional: Notes */}
-          <div className='text-sm text-gtm-gray-400 italic min-h-[1em]'>
-            {notes || ''}
+          {/* Bild (immer Platzhalter zeigen, falls kein Bild) */}
+          <div className=''>
+            <GTMImage width='' imgUrl={imgUrl} name={name} bordered={false} />
           </div>
         </div>
+      ) : (
+        <div className='w-full h-full flex items-center justify-center text-gtm-text-400 text-sm rounded-sm'>
+          Kein Messgerät zugeordnet
+        </div>
+      )}
 
-        {/* rechte Seite: Bild (immer Platzhalter zeigen, falls kein Bild) */}
-        <div className='flex-grow'>
-          <GTMImage
-            width='w-full'
-            imgUrl={imgUrl}
-            name={name}
-            bordered={false}
-          />
+      {/* StatusBar */}
+      <div className='absolute left-0 bottom-0 bg-gtm-gray-800 w-full p-2 border-t border-gtm-gray-700'>
+        <div className='flex items-center justify-between gap-2 w-full'>
+          {tool && (
+            <div className='flex gap-2'>
+              {/* Bluetooth Status */}
+              <div className='flex items-center gap-2'>
+                {btStatus === 'correct' && (
+                  <Bluetooth
+                    className='w-5 h-5 text-gtm-gray-500 hover:text-gtm-blue-400'
+                    strokeWidth={1.5}
+                    tooltip='Bluetooth verbunden'
+                  />
+                )}
+                {btStatus === 'wrong' && (
+                  <BluetoothOff
+                    className='w-5 h-5 bg-gtm-fail-500 text-gtm-gray-300 rounded-full border border-gtm-gray-300'
+                    strokeWidth={1.5}
+                  />
+                )}
+                {btStatus === 'none' && (
+                  <BluetoothOff
+                    className='w-5 h-5 bg-gtm-fail-500 text-gtm-gray-300 rounded-full border border-gtm-gray-300'
+                    strokeWidth={1.5}
+                  />
+                )}
+              </div>
+
+              {/* Kalibrierung */}
+              <div className='flex items-center gap-2'>
+                {isValid ? (
+                  <CheckCircle
+                    className='w-5 h-5 text-gtm-gray-500 hover:text-gtm-ok-500'
+                    strokeWidth={1.5}
+                  />
+                ) : (
+                  <AlertCircle
+                    className='w-5 h-5 text-gtm-fail-500'
+                    strokeWidth={1.5}
+                  />
+                )}
+                {/* <span
+                className={`font-medium text-sm ${
+                  isValid ? 'text-gtm-gray-500' : 'text-gtm-fail-500'
+                }`}
+              >
+                {valid_until || '–'}
+              </span> */}
+              </div>
+            </div>
+          )}
+
+          <div className='w-full flex items-center justify-end gap-2'>
+            <SquarePen
+              className='w-5 h-5 cursor-pointer text-gtm-gray-500 hover:text-gtm-gray-100'
+              strokeWidth={1.5}
+            />
+          </div>
         </div>
       </div>
     </div>

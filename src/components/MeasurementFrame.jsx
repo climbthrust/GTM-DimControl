@@ -57,7 +57,7 @@ export default function MeasurementFrame({
 
   return (
     <div className='flex w-full h-56 gap-4'>
-      <div className='flex flex-col justify-center flex-1 p-4 border border-gtm-gray-700 rounded-md bg-gtm-gray-900'>
+      <div className='flex flex-col justify-center flex-1 p-4 border border-gtm-gray-700 rounded-sm bg-gtm-gray-900'>
         <h2 className='text-4xl font-semibold mb-6 text-center text-gtm-text-100'>
           {dim.name}
         </h2>
@@ -97,18 +97,12 @@ export default function MeasurementFrame({
         </div>
       </div>
 
-      {dim.measurement_tool_id ? (
-        <div className='flex-none w-[420px]'>
-          <MeasurementTool
-            tool={measurementTools.find(t => t.id === dim.measurement_tool_id)}
-            connectedDeviceId={connectedDeviceId}
-          />
-        </div>
-      ) : (
-        <div className='flex-none w-[420px] flex items-center justify-center text-gtm-text-400 text-sm border border-gtm-gray-700 rounded-md bg-gtm-gray-900'>
-          Kein Messgerät zugeordnet
-        </div>
-      )}
+      <div className='flex-none w-[420px]'>
+        <MeasurementTool
+          tool={measurementTools.find(t => t.id === dim.measurement_tool_id)}
+          connectedDeviceId={connectedDeviceId}
+        />
+      </div>
     </div>
   );
 }

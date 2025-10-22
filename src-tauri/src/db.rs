@@ -30,6 +30,7 @@ pub struct Product {
     pub product_type: String,
     pub image_file_name: String,
     pub notes: String,
+    pub serial_number: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -58,38 +59,6 @@ pub struct MeasurementTool {
     pub valid_until: Option<String>,
     pub notes: Option<String>,
     pub image_file_name: Option<String>,
-}
-
-#[tauri::command]
-pub fn get_first_product() -> Result<Product, String> {
-    let conn = DB_CONN.lock().unwrap();
-
-    let mut stmt = conn
-        .prepare(
-            "SELECT id, name, series, product_type, image_file_name, notes 
-             FROM products 
-             ORDER BY id ASC LIMIT 1",
-        )
-        .map_err(|e| e.to_string())?;
-
-    let mut rows = stmt
-        .query_map([], |row| {
-            Ok(Product {
-                id: row.get(0)?,
-                name: row.get(1)?,
-                series: row.get(2)?,
-                product_type: row.get(3)?,
-                image_file_name: row.get(4)?,
-                notes: row.get(5)?,
-            })
-        })
-        .map_err(|e| e.to_string())?;
-
-    if let Some(result) = rows.next() {
-        result.map_err(|e| e.to_string())
-    } else {
-        Err("Keine Produkte gefunden".to_string())
-    }
 }
 
 #[tauri::command]
@@ -182,3 +151,48 @@ pub fn load_all_measurement_tools() -> Result<Vec<MeasurementTool>, String> {
     Ok(tools)
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+pub struct SerialNumber {
+    pub id: i32,
+    pub serial_number: String,
+    pub product_id: i32,
+    pub created_at: Option<String>,
+}
+
+#[tauri::command]
+pub fn get_product_by_serial(serial_number: String) -> Result<Product, String> {
+    let conn = DB_CONN.lock().unwrap();
+
+    // Produkt + Seriennummer in einem JOIN laden
+    let mut stmt = conn
+        .prepare(
+            "SELECT 
+                p.id,
+                p.name,
+                p.series,
+                p.product_type,
+                p.image_file_name,
+                p.notes,
+                s.serial_number
+             FROM serial_numbers s
+             JOIN products p ON s.product_id = p.id
+             WHERE s.serial_number = ?1",
+        )
+        .map_err(|e| e.to_string())?;
+
+    let product = stmt
+        .query_row([serial_number.trim()], |row| {
+            Ok(Product {
+                id: row.get(0)?,
+                name: row.get(1)?,
+                series: row.get(2)?,
+                product_type: row.get(3)?,
+                image_file_name: row.get(4)?,
+                notes: row.get(5)?,
+                serial_number: row.get(6)?,
+            })
+        })
+        .map_err(|_| "Seriennummer nicht gefunden".to_string())?;
+
+    Ok(product)
+}

@@ -4,7 +4,11 @@ import GTMImage from './GTMImage';
 import MeasurementFrame from './MeasurementFrame';
 import DimensionsTable from './DimensionsTable';
 
-export default function Dimensions({ dimensions, measurementTools }) {
+export default function Dimensions({
+  dimensions,
+  measurementTools,
+  highlighted,
+}) {
   const [values, setValues] = useState({});
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -44,7 +48,7 @@ export default function Dimensions({ dimensions, measurementTools }) {
   const currentDim = dimensions?.[currentIndex] || null;
 
   return (
-    <Frame>
+    <Frame highlighted={highlighted}>
       <div className='flex w-full h-full gap-4'>
         {/* === Linke Seite: Messung + Grid === */}
         <div className='flex flex-col w-2/3 h-full'>
@@ -64,7 +68,7 @@ export default function Dimensions({ dimensions, measurementTools }) {
           </div>
 
           {/* === Grid-Tabelle === */}
-          <div className='flex-1 overflow-auto rounded-md'>
+          <div className='flex-1 overflow-auto rounded-sm'>
             <DimensionsTable
               dimensions={dimensions}
               values={values}

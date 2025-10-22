@@ -12,6 +12,26 @@ export default function App() {
 
   // --------------------------------------------------
 
+  async function loadProductBySerial(serialNumber) {
+    try {
+      const prod = await invoke('get_product_by_serial', { serialNumber });
+      if (!prod) throw new Error('Kein Produkt zur Seriennummer gefunden');
+
+      const dims = await invoke('get_dimensions_for_product', {
+        productId: prod.id,
+      });
+
+      setProduct(prod);
+      setDimensions(dims);
+      setMode('dimensions');
+    } catch (err) {
+      console.error('Fehler beim Laden per Seriennummer:', err);
+      setProduct(null);
+      setDimensions([]);
+      setMode('product');
+    }
+  }
+
   async function loadAllMeasurementTools() {
     try {
       const tools = await invoke('load_all_measurement_tools');
@@ -22,39 +42,39 @@ export default function App() {
     }
   }
 
-  async function loadProductAndDimensions(productId) {
-    try {
-      const prod = productId
-        ? await invoke('get_product_by_id', { productId })
-        : await invoke('get_first_product');
+  // async function loadProductAndDimensions(productId) {
+  //   try {
+  //     const prod = productId
+  //       ? await invoke('get_product_by_id', { productId })
+  //       : await invoke('get_first_product');
 
-      if (!prod) {
-        console.error('Kein Produkt erhalten');
-        setProduct(null);
-        setDimensions([]);
-        setMode('product');
-        return;
-      }
+  //     if (!prod) {
+  //       console.error('Kein Produkt erhalten');
+  //       setProduct(null);
+  //       setDimensions([]);
+  //       setMode('product');
+  //       return;
+  //     }
 
-      const dims = await invoke('get_dimensions_for_product', {
-        productId: prod.id,
-      });
+  //     const dims = await invoke('get_dimensions_for_product', {
+  //       productId: prod.id,
+  //     });
 
-      setProduct(prod);
-      setDimensions(dims);
-      setMode('dimensions');
-    } catch (err) {
-      console.error('Fehler beim Laden:', err);
-      setProduct(null);
-      setDimensions([]);
-      setMode('product');
-    }
-  }
+  //     setProduct(prod);
+  //     setDimensions(dims);
+  //     setMode('dimensions');
+  //   } catch (err) {
+  //     console.error('Fehler beim Laden:', err);
+  //     setProduct(null);
+  //     setDimensions([]);
+  //     setMode('product');
+  //   }
+  // }
 
   // Daten laden beim Start
   useEffect(() => {
     async function init() {
-      await loadProductAndDimensions();
+      // await loadProductAndDimensions();
       await loadAllMeasurementTools();
     }
     init();
@@ -89,16 +109,25 @@ export default function App() {
                       selection:bg-gtm-accent-400 selection:text-gtm-text-900'
       >
         <div className='flex-none h-64'>
-          <ProductData product={product} />
+          <ProductData
+            product={product}
+            onLoadBySerial={loadProductBySerial}
+            highlighted={mode === 'product'}
+          />
         </div>
         <div className='flex-grow min-h-0'>
           <Dimensions
             dimensions={dimensions}
             measurementTools={measurementTools}
+            highlighted={mode === 'dimensions'}
           />
         </div>
         <div className='flex-none'>
-          <SaveReport product={product} dimensions={dimensions} />
+          <SaveReport
+            product={product}
+            dimensions={dimensions}
+            highlighted={mode === 'save'}
+          />
         </div>
       </div>
     </div>
