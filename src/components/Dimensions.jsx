@@ -49,38 +49,43 @@ export default function Dimensions({
 
   return (
     <Frame highlighted={highlighted}>
-      <div className='flex w-full h-full gap-4'>
-        {/* === Linke Seite: Messung + Grid === */}
-        <div className='flex flex-col w-2/3 h-full'>
-          {/* Mess-Frame */}
-          <div className='flex-none mb-4'>
-            {currentDim && (
-              <MeasurementFrame
-                dim={currentDim}
-                value={values[currentDim.id]}
-                onSave={handleSaveValue}
-                onNext={handleNext}
-                measurementTools={measurementTools}
-                onMoveUp={moveUp}
-                onMoveDown={moveDown}
-              />
-            )}
-          </div>
-
-          {/* === Grid-Tabelle === */}
-          <div className='flex-1 overflow-auto rounded-sm'>
-            <DimensionsTable
-              dimensions={dimensions}
-              values={values}
-              currentIndex={currentIndex}
-              setCurrentIndex={setCurrentIndex}
-            />
-          </div>
+      <div className='flex-col gap-4 items-center justify-center w-full h-full'>
+        <div className='text-4xl mb-6 text-center text-gtm-text-100'>
+          {currentDim?.name}
         </div>
+        <div className='flex w-full h-full gap-4'>
+          {/* === Linke Seite: Messung + Grid === */}
+          <div className='flex flex-col w-2/3 h-full'>
+            {/* Mess-Frame */}
+            <div className='flex-none mb-4'>
+              {currentDim && (
+                <MeasurementFrame
+                  dim={currentDim}
+                  value={values[currentDim.id]}
+                  onSave={handleSaveValue}
+                  onNext={handleNext}
+                  measurementTools={measurementTools}
+                  onMoveUp={moveUp}
+                  onMoveDown={moveDown}
+                />
+              )}
+            </div>
 
-        {/* === Rechte Seite: Bildbereich === */}
-        <div className='flex-none w-1/3 h-full'>
-          <GTMImage width='w-full h-full object-contain' imgUrl='' name='' />
+            {/* === Grid-Tabelle === */}
+            <div className='flex-1 overflow-auto rounded-sm'>
+              <DimensionsTable
+                dimensions={dimensions}
+                values={values}
+                currentIndex={currentIndex}
+                setCurrentIndex={setCurrentIndex}
+              />
+            </div>
+          </div>
+
+          {/* === Rechte Seite: Bildbereich === */}
+          <div className='flex-none w-1/3 h-full'>
+            <GTMImage width='w-full h-full object-contain' imgUrl='' name='' />
+          </div>
         </div>
       </div>
     </Frame>

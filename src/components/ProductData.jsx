@@ -92,29 +92,29 @@ export default function ProductData({
       <div className=' flex w-full h-full gap-4'>
         {/* Produktinfos */}
         <div className='flex-1 flex flex-col gap-4 justify-between'>
-          <div>
-            <div className='relative w-fit'>
-              <h1 className='text-gtm-text-200 text-4xl mb-2'>
-                {product.serial_number || '–'}
-              </h1>
-              <button onClick={handleUnload}>
+          <div className='flex gap-4 items-center mb-2 flex-grow'>
+            <h1 className='text-gtm-text-200 text-4xl'>
+              {product.serial_number || '–'}
+            </h1>
+            {/* <button onClick={handleUnload}>
                 <X className='absolute -right-4 -top-2 bg-gtm-fail-700 w-5 h-5 rounded-full border border-gtm-gray-300' />
-              </button>
-            </div>
+              </button> */}
 
-            <div className='w-auto'>
-              <Notes emphasized={false} compact={true}>
-                <h2 className='text-2xl font-semibold text-gtm-text-300'>
-                  Serie {series || '–'} / {product_type || '–'}
-                </h2>
-              </Notes>
-            </div>
+            <h2 className='text-2xl font-semibold text-gtm-text-300 rounded-full px-3 py-1 bg-gtm-gray-800'>
+              Serie {series || '–'} / {product_type || '–'}
+            </h2>
           </div>
           <Notes>{notes}</Notes>
         </div>
 
         {/* Produktbild */}
-        <GTMImage width='w-1/3' imgUrl={imgUrl} name={name} bordered={false} />
+        <GTMImage
+          width='w-1/5'
+          imgUrl={imgUrl}
+          name={name}
+          bordered={false}
+          align='justify-end'
+        />
       </div>
     </Frame>
   );

@@ -1,3 +1,4 @@
+// ToDo: Measurement Tool wird zu groß angezeigt und verschiebt StatusBar
 import React from 'react';
 import {
   Bluetooth,
@@ -41,32 +42,37 @@ const MeasurementTool = ({ tool, connectedDeviceId }) => {
   }
 
   // --- Bluetooth-Status ---
-  let btStatus = 'correct'; // none | correct | wrong
-  // if (connectedDeviceId) {
-  //   btStatus = connectedDeviceId === bluetooth_id ? 'correct' : 'wrong';
-  // }
+  let btStatus = 'none'; // none | correct | wrong
+  if (connectedDeviceId) {
+    btStatus = connectedDeviceId === bluetooth_id ? 'correct' : 'wrong';
+  }
 
   return (
     <div className='relative w-full h-full text-lg text-gtm-gray-300 rounded-sm border border-gtm-gray-700 flex flex-col items-center gap-2'>
       {tool ? (
-        <div className='fex flex-col h-full w-full items-center p-2'>
+        <div className='flex flex-col h-full w-full items-center justify-between p-2'>
           <div className='text-xl text-center font-semibold mb-2'>
             {name || '–'}
           </div>
 
           {/* Bild (immer Platzhalter zeigen, falls kein Bild) */}
-          <div className=''>
-            <GTMImage width='' imgUrl={imgUrl} name={name} bordered={false} />
+          <div className='h-fit'>
+            <GTMImage
+              width='w-fit'
+              imgUrl={imgUrl}
+              name={name}
+              bordered={false}
+            />
           </div>
         </div>
       ) : (
-        <div className='w-full h-full flex items-center justify-center text-gtm-text-400 text-sm rounded-sm'>
+        <div className='grow w-full h-full flex items-center justify-center text-gtm-text-400 text-sm rounded-sm'>
           Kein Messgerät zugeordnet
         </div>
       )}
 
       {/* StatusBar */}
-      <div className='absolute left-0 bottom-0 bg-gtm-gray-800 w-full p-2 border-t border-gtm-gray-700'>
+      <div className=' bg-gtm-gray-800 w-full p-2 border-t border-gtm-gray-700'>
         <div className='flex items-center justify-between gap-2 w-full'>
           {tool && (
             <div className='flex gap-2'>
@@ -74,20 +80,19 @@ const MeasurementTool = ({ tool, connectedDeviceId }) => {
               <div className='flex items-center gap-2'>
                 {btStatus === 'correct' && (
                   <Bluetooth
-                    className='w-5 h-5 text-gtm-gray-500 hover:text-gtm-blue-400'
+                    className='w-5 h-5 rounded-full text-gtm-gray-500 hover:text-gtm-gray-300 hover:bg-gtm-blue-500'
                     strokeWidth={1.5}
-                    tooltip='Bluetooth verbunden'
                   />
                 )}
                 {btStatus === 'wrong' && (
                   <BluetoothOff
-                    className='w-5 h-5 bg-gtm-fail-500 text-gtm-gray-300 rounded-full border border-gtm-gray-300'
+                    className='w-5 h-5 bg-gtm-fail-600 text-gtm-gray-300 rounded-full border border-gtm-gray-300'
                     strokeWidth={1.5}
                   />
                 )}
                 {btStatus === 'none' && (
                   <BluetoothOff
-                    className='w-5 h-5 bg-gtm-fail-500 text-gtm-gray-300 rounded-full border border-gtm-gray-300'
+                    className='w-5 h-5 bg-gtm-fail-600 text-gtm-gray-300 rounded-full border border-gtm-gray-300'
                     strokeWidth={1.5}
                   />
                 )}
@@ -97,12 +102,12 @@ const MeasurementTool = ({ tool, connectedDeviceId }) => {
               <div className='flex items-center gap-2'>
                 {isValid ? (
                   <CheckCircle
-                    className='w-5 h-5 text-gtm-gray-500 hover:text-gtm-ok-500'
+                    className='w-5 h-5 rounded-full text-gtm-gray-500 hover:text-gtm-gray-300 hover:bg-gtm-ok-600 '
                     strokeWidth={1.5}
                   />
                 ) : (
                   <AlertCircle
-                    className='w-5 h-5 text-gtm-fail-500'
+                    className='w-5 h-5 bg-gtm-fail-500 text-gtm-gray-300'
                     strokeWidth={1.5}
                   />
                 )}

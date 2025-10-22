@@ -104,11 +104,11 @@ export default function App() {
   return (
     <div className='w-screen h-screen'>
       <div
-        className='flex flex-col w-screen h-screen gap-4 p-4
+        className='flex flex-col w-screen h-screen gap-2 p-4
                       bg-gtm-gray-900 text-gtm-text-100 font-sans
                       selection:bg-gtm-accent-400 selection:text-gtm-text-900'
       >
-        <div className='flex-none h-64'>
+        <div className='flex-none h-48'>
           <ProductData
             product={product}
             onLoadBySerial={loadProductBySerial}

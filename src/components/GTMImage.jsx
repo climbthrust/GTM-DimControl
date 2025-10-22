@@ -1,11 +1,17 @@
 import React from 'react';
 
-const GTMImage = ({ width, imgUrl, name, bordered = true }) => {
+const GTMImage = ({
+  width,
+  imgUrl,
+  name,
+  bordered = true,
+  align = 'justify-center',
+}) => {
   return (
     <div
       className={`${width} ${
         bordered && 'border border-gtm-gray-700  bg-gtm-gray-800'
-      } rounded-sm flex items-center justify-center overflow-hidden`}
+      } rounded-sm flex items-center ${align} overflow-hidden`}
     >
       {imgUrl ? (
         <img
