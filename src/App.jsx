@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { invoke } from '@tauri-apps/api/core';
-import ProductPage from './pages/ProductPage';
+import ProductData from './components/ProductData';
+import Dimensions from './components/Dimensions';
+import SaveReport from './components/SaveReport'; // optional, wenn du später speicherst
 
 export default function App() {
-  // const [page, setPage] = useState('product');
+  const [mode, setMode] = useState('product'); // 'product' | 'dimensions' | 'save'
   const [product, setProduct] = useState(null);
   const [dimensions, setDimensions] = useState([]);
   const [measurementTools, setMeasurementTools] = useState([]);
 
-  useEffect(() => {
-    loadProductAndDimensions();
-    loadAllMeasurementTools();
-  }, []);
+  // --------------------------------------------------
 
   async function loadAllMeasurementTools() {
     try {
@@ -33,7 +32,7 @@ export default function App() {
         console.error('Kein Produkt erhalten');
         setProduct(null);
         setDimensions([]);
-        setBasePath('');
+        setMode('product');
         return;
       }
 
@@ -43,33 +42,65 @@ export default function App() {
 
       setProduct(prod);
       setDimensions(dims);
+      setMode('dimensions');
     } catch (err) {
       console.error('Fehler beim Laden:', err);
       setProduct(null);
       setDimensions([]);
+      setMode('product');
     }
   }
 
-  // const goToMeasurement = () => setPage('measurement');
-  // const goToProduct = () => setPage('product');
+  // Daten laden beim Start
+  useEffect(() => {
+    async function init() {
+      await loadProductAndDimensions();
+      await loadAllMeasurementTools();
+    }
+    init();
+  }, []);
 
-  // if (page === 'measurement') {
-  //   return (
-  //     <MeasurementPage
-  //       dimensions={dimensions}
-  //       setDimensions={setDimensions}
-  //       measurementTools={measurementTools}
-  //       onBack={goToProduct}
-  //     />
-  //   );
-  // }
+  // --------------------------------------------------
+  // Key Listener auf App-Ebene
+  useEffect(() => {
+    const handleKeyDown = e => {
+      if (mode === 'product' && product) {
+        setMode('dimensions');
+      } else if (mode === 'dimensions') {
+        // Beispiel: Wenn alle gemessen → Mode save
+        const allMeasured = dimensions.every(d => d.measured_value != null);
+        if (allMeasured) setMode('save');
+      } else if (mode === 'save' && e.key === 'Enter') {
+        console.log('Speichervorgang ausgelöst');
+      }
+    };
 
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [mode, product, dimensions]);
+
+  // --------------------------------------------------
+  // Layout bleibt statisch — nur Inhalt ändert sich
   return (
-    <ProductPage
-      product={product}
-      dimensions={dimensions}
-      measurementTools={measurementTools}
-      // gotoMeasurement={goToMeasurement}
-    />
+    <div className='w-screen h-screen'>
+      <div
+        className='flex flex-col w-screen h-screen gap-4 p-4
+                      bg-gtm-gray-900 text-gtm-text-100 font-sans
+                      selection:bg-gtm-accent-400 selection:text-gtm-text-900'
+      >
+        <div className='flex-none h-64'>
+          <ProductData product={product} />
+        </div>
+        <div className='flex-grow min-h-0'>
+          <Dimensions
+            dimensions={dimensions}
+            measurementTools={measurementTools}
+          />
+        </div>
+        <div className='flex-none'>
+          <SaveReport product={product} dimensions={dimensions} />
+        </div>
+      </div>
+    </div>
   );
 }

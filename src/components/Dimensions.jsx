@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Frame from './Frame';
 import GTMImage from './GTMImage';
 import MeasurementFrame from './MeasurementFrame';
-import { getPrecisionSettings } from '../utils/getPrecisionSettings';
 import DimensionsTable from './DimensionsTable';
 
 export default function Dimensions({ dimensions, measurementTools }) {
