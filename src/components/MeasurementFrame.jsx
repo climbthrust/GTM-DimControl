@@ -56,7 +56,7 @@ export default function MeasurementFrame({
   };
 
   return (
-    <div className='flex w-full h-56 gap-4'>
+    <div className='flex w-full h-56 gap-2'>
       <div className='flex flex-col justify-between flex-1 p-4 border border-gtm-gray-700 rounded-sm bg-gtm-gray-900'>
         <div className='flex w-full justify-between items-center max-w-3xl mx-auto'>
           <div className='flex-grow text-center'>
