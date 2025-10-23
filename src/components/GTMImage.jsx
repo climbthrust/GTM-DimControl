@@ -11,7 +11,7 @@ const GTMImage = ({
     <div
       className={`${width} ${
         bordered && 'border border-gtm-gray-700  bg-gtm-gray-800'
-      } rounded-sm flex items-center ${align} overflow-hidden`}
+      } rounded-sm flex items-center ${align} overflow-hidden h-full w-auto`}
     >
       {imgUrl ? (
         <img

@@ -36,26 +36,17 @@ export default function Dimensions({
     setCurrentIndex(i => (i > 0 ? i - 1 : 0)); // kein Wrap nach oben
   };
 
-  // // === Statusberechnung ===
-  // const getRowStatus = (dim, value) => {
-  //   if (value === '' || value == null || isNaN(value)) return 'neutral';
-  //   const v = parseFloat(value);
-  //   const lower = dim.nominal - Math.abs(dim.tol_minus);
-  //   const upper = dim.nominal + Math.abs(dim.tol_plus);
-  //   return v >= lower && v <= upper ? 'ok' : 'fail';
-  // };
-
   const currentDim = dimensions?.[currentIndex] || null;
 
   return (
     <Frame highlighted={highlighted}>
-      <div className='flex-col gap-2 items-center justify-center w-full h-full'>
+      <div className='flex flex-col gap-2 items-center justify-center w-full h-full'>
         <div className='text-4xl mb-6 text-center text-gtm-text-100'>
           {currentDim?.name}
         </div>
         <div className='flex w-full h-full gap-2'>
           {/* === Linke Seite: Messung + Grid === */}
-          <div className='flex flex-col w-2/3 h-full gap-2'>
+          <div className='flex flex-col w-2/3 h-full gap-2 min-h-0'>
             {/* Mess-Frame */}
             <div className='flex-none'>
               {currentDim && (
@@ -72,7 +63,7 @@ export default function Dimensions({
             </div>
 
             {/* === Grid-Tabelle === */}
-            <div className='flex-1 overflow-auto rounded-sm'>
+            <div className='flex-1 overflow-auto rounded-sm min-h-0'>
               <DimensionsTable
                 dimensions={dimensions}
                 values={values}
@@ -83,8 +74,10 @@ export default function Dimensions({
           </div>
 
           {/* === Rechte Seite: Bildbereich === */}
-          <div className='flex-none w-1/3 h-full'>
-            <GTMImage width='w-full' imgUrl='' name='' />
+          <div className='flex w-1/3 h-full min-h-0'>
+            <div className='w-full h-full border border-gtm-gray-700 bg-gtm-gray-800 rounded-sm flex items-center justify-center'>
+              <p className='text-gtm-text-400'>Kein Bild</p>
+            </div>
           </div>
         </div>
       </div>

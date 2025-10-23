@@ -42,7 +42,7 @@ const MeasurementTool = ({ tool, connectedDeviceId }) => {
   }
 
   // --- Bluetooth-Status ---
-  let btStatus = 'none'; // none | correct | wrong
+  let btStatus = 'correct'; // none | correct | wrong
   if (connectedDeviceId) {
     btStatus = connectedDeviceId === bluetooth_id ? 'correct' : 'wrong';
   }
@@ -56,13 +56,16 @@ const MeasurementTool = ({ tool, connectedDeviceId }) => {
           </div>
 
           {/* Bild (immer Platzhalter zeigen, falls kein Bild) */}
-          <div className='h-fit'>
-            <GTMImage
-              width='w-fit'
-              imgUrl={imgUrl}
-              name={name}
-              bordered={false}
-            />
+          <div className='h-28 flex items-center justify-center border border-gtm-gray-700 bg-gtm-gray-800 rounded-sm'>
+            {imgUrl ? (
+              <img
+                src={imgUrl}
+                alt={name || 'Produktbild'}
+                className='h-full w-auto max-w-full object-contain rounded'
+              />
+            ) : (
+              <p className='text-gtm-text-400'>Kein Bild</p>
+            )}
           </div>
         </div>
       ) : (
@@ -99,7 +102,14 @@ const MeasurementTool = ({ tool, connectedDeviceId }) => {
               </div>
 
               {/* Kalibrierung */}
-              <div className='flex items-center gap-2'>
+              <div
+                className='flex items-center gap-2 '
+                title={
+                  valid_until
+                    ? `Kalibrierung gültig bis ${valid_until}`
+                    : 'Kalibrierung abgelaufen'
+                }
+              >
                 {isValid ? (
                   <CheckCircle
                     className='w-5 h-5 rounded-full text-gtm-gray-500 hover:text-gtm-gray-300 hover:bg-gtm-ok-600 '

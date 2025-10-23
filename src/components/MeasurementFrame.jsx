@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import MeasurementTool from './MeasurementTool';
 import { getPrecisionSettings } from '../utils/getPrecisionSettings';
+import MeasurementDisplay from './MeasurementDisplay';
 
 export default function MeasurementFrame({
   dim,
@@ -58,7 +59,16 @@ export default function MeasurementFrame({
   return (
     <div className='flex w-full h-56 gap-2'>
       <div className='flex flex-col justify-between flex-1 p-4 border border-gtm-gray-700 rounded-sm bg-gtm-gray-900'>
-        <div className='flex w-full justify-between items-center max-w-3xl mx-auto'>
+        <MeasurementDisplay
+          nominal={dim.nominal}
+          tolPlus={dim.tol_plus}
+          tolMinus={dim.tol_minus}
+          value={currentValue}
+          unit={dim.unit}
+          onChange={val => setCurrentValue(val)}
+        />
+
+        {/* <div className='flex w-full justify-between items-center max-w-3xl mx-auto'>
           <div className='flex-grow text-center'>
             <p className='text-2xl text-gtm-text-200'>
               Soll: {dim.nominal.toFixed(displayDecimals)} {dim.unit}
@@ -90,7 +100,7 @@ export default function MeasurementFrame({
               Weiter
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
 
       <div className='flex-none w-[420px]'>
