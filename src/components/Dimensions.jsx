@@ -41,7 +41,7 @@ export default function Dimensions({
   return (
     <Frame highlighted={highlighted}>
       <div className='flex flex-col gap-2 items-center justify-center w-full h-full'>
-        <div className='text-4xl mb-6 text-center text-gtm-text-100'>
+        <div className='text-4xl mb-3 text-center text-gtm-text-100'>
           {currentDim?.name}
         </div>
         <div className='flex w-full h-full gap-2'>

@@ -67,14 +67,14 @@ export default function MeasurementScaleSVG({
   return (
     <svg width={width} height={height} className='select-none'>
       {/* Hintergrund */}
-      <rect
+      {/* <rect
         x='0'
         y='0'
         width={width}
         height={height}
         fill={colors.gray800}
         rx='6'
-      />
+      /> */}
 
       {/* Toleranzband */}
       <rect
@@ -137,47 +137,6 @@ export default function MeasurementScaleSVG({
         strokeWidth='1'
       />
 
-      {/* Messbalken */}
-      {!(state == 'neutral') && (
-        <rect
-          x={indicatorX - barWidth / 2}
-          y={bandTop - marginOfLines}
-          width={barWidth}
-          height={bandHeight + 2 * marginOfLines}
-          fill={colors.gray100}
-        />
-      )}
-
-      {/* Nominal Bar */}
-      <line
-        x1={nominalX}
-        y1={linesTopBottom - marginOfLines}
-        x2={nominalX}
-        y2={linesBottomTop + marginOfLines}
-        stroke={colors.accent500}
-        strokeWidth='1'
-      />
-
-      {/* oberes Dreieck (zeigt nach unten) */}
-      <polygon
-        points={`
-    ${nominalX - 3},${linesTopBottom - marginOfLines}
-    ${nominalX + 3},${linesTopBottom - marginOfLines}
-    ${nominalX},${linesTopBottom + 6 - marginOfLines}
-  `}
-        fill={colors.accent500}
-      />
-
-      {/* unteres Dreieck (zeigt nach oben) */}
-      <polygon
-        points={`
-    ${nominalX - 3},${linesBottomTop + marginOfLines}
-    ${nominalX + 3},${linesBottomTop + marginOfLines}
-    ${nominalX},${linesBottomTop - 6 + marginOfLines}
-  `}
-        fill={colors.accent500}
-      />
-
       {/* Zahlen unten */}
       <text
         x={tolMinusX}
@@ -190,9 +149,9 @@ export default function MeasurementScaleSVG({
       </text>
       <text
         x={nominalX}
-        y={height - 10}
+        y={height - 8}
         textAnchor='middle'
-        fontSize='14'
+        fontSize='18'
         fill={colors.gray500}
       >
         {fmt(nominal)}
