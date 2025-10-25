@@ -9,34 +9,46 @@ export default function Dimensions({
   measurementTools,
   highlighted,
 }) {
-  const [values, setValues] = useState({});
+  const [dimensionsWithValues, setDimensionsWithValues] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  // === Initialisierung ===
   useEffect(() => {
-    if (dimensions && dimensions.length > 0) setCurrentIndex(0);
+    if (dimensions && dimensions.length > 0) {
+      // Kopie der Dimensionen mit zusätzlichem Feld measuredValue
+      const initialized = dimensions.map(d => ({
+        ...d,
+        measuredValue: d.measuredValue ?? null,
+      }));
+      setDimensionsWithValues(initialized);
+      setCurrentIndex(0);
+    }
   }, [dimensions]);
 
+  // === Messwert speichern ===
   const handleSaveValue = (id, value) => {
-    setValues(prev => ({ ...prev, [id]: value }));
+    setDimensionsWithValues(prev =>
+      prev.map(d => (d.id === id ? { ...d, measuredValue: value } : d))
+    );
   };
 
   // === Tastatur- und Navigationslogik ===
   const handleNext = () => {
-    if (!dimensions?.length) return;
-    setCurrentIndex(i => (i + 1) % dimensions.length); // Wrap
+    if (!dimensionsWithValues?.length) return;
+    setCurrentIndex(i => (i + 1) % dimensionsWithValues.length); // Wrap
   };
 
   const moveDown = () => {
-    if (!dimensions?.length) return;
-    setCurrentIndex(i => (i + 1) % dimensions.length); // Wrap
+    if (!dimensionsWithValues?.length) return;
+    setCurrentIndex(i => (i + 1) % dimensionsWithValues.length); // Wrap
   };
 
   const moveUp = () => {
-    if (!dimensions?.length) return;
+    if (!dimensionsWithValues?.length) return;
     setCurrentIndex(i => (i > 0 ? i - 1 : 0)); // kein Wrap nach oben
   };
 
-  const currentDim = dimensions?.[currentIndex] || null;
+  const currentDim = dimensionsWithValues?.[currentIndex] || null;
 
   return (
     <Frame highlighted={highlighted}>
@@ -44,6 +56,7 @@ export default function Dimensions({
         <div className='text-4xl mb-3 text-center text-gtm-text-100'>
           {currentDim?.name}
         </div>
+
         <div className='flex w-full h-full gap-2'>
           {/* === Linke Seite: Messung + Grid === */}
           <div className='flex flex-col w-2/3 h-full gap-2 min-h-0'>
@@ -52,7 +65,6 @@ export default function Dimensions({
               {currentDim && (
                 <MeasurementFrame
                   dim={currentDim}
-                  value={values[currentDim.id]}
                   onSave={handleSaveValue}
                   onNext={handleNext}
                   measurementTools={measurementTools}
@@ -65,8 +77,7 @@ export default function Dimensions({
             {/* === Grid-Tabelle === */}
             <div className='flex-1 overflow-auto rounded-sm min-h-0'>
               <DimensionsTable
-                dimensions={dimensions}
-                values={values}
+                dimensions={dimensionsWithValues}
                 currentIndex={currentIndex}
                 setCurrentIndex={setCurrentIndex}
               />

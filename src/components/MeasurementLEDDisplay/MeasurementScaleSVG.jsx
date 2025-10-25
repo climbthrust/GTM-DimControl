@@ -68,19 +68,71 @@ export default function MeasurementScaleSVG({
             ? colors.green800
             : colors.gray600
         }
-        strokeWidth={3}
+        strokeWidth={1}
       />
 
       {/* Toleranzlinien */}
-      <line x1={tolMinusX} y1={linesTopTop} x2={tolMinusX} y2={linesTopBottom} stroke={colors.gray600} strokeWidth='1' />
-      <line x1={tolMinusX} y1={linesBottomTop} x2={tolMinusX} y2={linesBottomBottom} stroke={colors.gray600} strokeWidth='1' />
-      <line x1={tolPlusX} y1={linesTopTop} x2={tolPlusX} y2={linesTopBottom} stroke={colors.gray600} strokeWidth='1' />
-      <line x1={tolPlusX} y1={linesBottomTop} x2={tolPlusX} y2={linesBottomBottom} stroke={colors.gray600} strokeWidth='1' />
+      <line
+        x1={tolMinusX}
+        y1={linesTopTop}
+        x2={tolMinusX}
+        y2={linesTopBottom}
+        stroke={colors.gray600}
+        strokeWidth='1'
+      />
+      <line
+        x1={tolMinusX}
+        y1={linesBottomTop}
+        x2={tolMinusX}
+        y2={linesBottomBottom}
+        stroke={colors.gray600}
+        strokeWidth='1'
+      />
+      <line
+        x1={tolPlusX}
+        y1={linesTopTop}
+        x2={tolPlusX}
+        y2={linesTopBottom}
+        stroke={colors.gray600}
+        strokeWidth='1'
+      />
+      <line
+        x1={tolPlusX}
+        y1={linesBottomTop}
+        x2={tolPlusX}
+        y2={linesBottomBottom}
+        stroke={colors.gray600}
+        strokeWidth='1'
+      />
 
       {/* Zahlen */}
-      <text x={tolMinusX} y={height - 10} textAnchor='middle' fontSize='14' fill={colors.gray500}>{fmt(leftValue)}</text>
-      <text x={nominalX}  y={height - 8}  textAnchor='middle' fontSize='18' fill={colors.gray500}>{fmt(nominal)}</text>
-      <text x={tolPlusX}  y={height - 10} textAnchor='middle' fontSize='14' fill={colors.gray500}>{fmt(rightValue)}</text>
+      <text
+        x={tolMinusX}
+        y={height - 10}
+        textAnchor='middle'
+        fontSize='14'
+        fill={colors.gray500}
+      >
+        {fmt(leftValue)}
+      </text>
+      <text
+        x={nominalX}
+        y={height - 8}
+        textAnchor='middle'
+        fontSize='18'
+        fill={colors.gray500}
+      >
+        {fmt(nominal)}
+      </text>
+      <text
+        x={tolPlusX}
+        y={height - 10}
+        textAnchor='middle'
+        fontSize='14'
+        fill={colors.gray500}
+      >
+        {fmt(rightValue)}
+      </text>
     </svg>
   );
 }

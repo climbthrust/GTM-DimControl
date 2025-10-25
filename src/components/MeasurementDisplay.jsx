@@ -95,7 +95,7 @@ export default function MeasurementDisplay({
     triangleSize: 3,
     triangleHeight: 6,
     color: colors.accent500,
-    strokeWidth: 1,
+    strokeWidth: 2,
   };
 
   // === Render ==============================================================
@@ -129,6 +129,7 @@ export default function MeasurementDisplay({
           height={height}
         />
 
+        {/* Weißer Messbalken mit Swoosh */}
         {state !== 'neutral' && (
           <>
             <div
@@ -138,17 +139,18 @@ export default function MeasurementDisplay({
                 width: `${indicatorX - (minIndicatorX - 3)}px`, // Dynamische Breite vom min bis aktuelle Position
                 left: `${minIndicatorX - 3}px`, // Startpunkt (minimaler Balkenwert)
                 top: `${height * 0.3}px`,
+                /* prettier-ignore */
                 background: `linear-gradient(
-      to right,
-      rgba(245,245,245,0) 0%,
-      rgba(245,245,245,0.15) 100%
-    )`,
+                  to right,
+                  rgba(245,245,245,0) 0%,
+                  rgba(245,245,245,0.15) 100%
+                )`,
                 pointerEvents: 'none',
               }}
             />
 
             <div
-              className='absolute bg-white transition-transform duration-300 ease-out'
+              className='absolute bg-gtm-gray-100 transition-transform duration-300 ease-out'
               style={{
                 width: '6px',
                 height: `${height * 0.38}px`,
@@ -160,20 +162,9 @@ export default function MeasurementDisplay({
           </>
         )}
 
-        {/* === Weißer Messbalken === */}
-        {/* <div
-          className='absolute bg-gtm-gray-100 transition-transform duration-300 ease-out'
-          style={{
-            width: '6px',
-            height: `${height * 0.38}px`,
-            top: `${height * 0.3}px`,
-            transform: `translateX(${indicatorX - 3}px)`,
-          }}
-        /> */}
-
         {/* === Nominal-Marker (Linie + Dreiecke) === */}
         <svg
-          className='absolute top-0 left-0 pointer-events-none'
+          className='absolute top-0 left-0 pointer-events-none z-20'
           width={width}
           height={height}
         >

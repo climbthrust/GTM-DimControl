@@ -1,47 +1,56 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import MeasurementTool from './MeasurementTool';
 import { getPrecisionSettings } from '../utils/getPrecisionSettings';
-import MeasurementDisplay from './MeasurementDisplay';
+import MeasurementLEDDisplay from './MeasurementLEDDisplay/MeasurementLEDDisplay';
 
 export default function MeasurementFrame({
   dim,
-  value,
   onSave,
   onNext,
   measurementTools,
   onMoveUp,
   onMoveDown,
 }) {
-  const [currentValue, setCurrentValue] = useState(value || '');
-  const [connectedDeviceId, setConnectedDeviceId] = useState(null);
-
-  useEffect(() => {
-    setCurrentValue(value || '');
-  }, [dim.id]);
-
-  const { displayDecimals, step } = useMemo(
+  // === Anzeigepräzision (falls benötigt) ==================================
+  const { displayDecimals } = useMemo(
     () => getPrecisionSettings(dim.tol_plus, dim.tol_minus),
     [dim.tol_plus, dim.tol_minus]
   );
 
-  const handleConfirm = () => {
-    if (currentValue !== '' && !isNaN(currentValue)) {
-      onSave(dim.id, currentValue);
+  // === Hilfsfunktion: Dezimalstellen zählen ===============================
+  function getDecimalCount(num) {
+    if (!isFinite(num)) return 0;
+    let e = 1;
+    let p = 0;
+    while (Math.round(num * e) / e !== num) {
+      e *= 10;
+      p++;
+      if (p > 10) break; // Sicherheitsgrenze
     }
-    onNext();
-  };
+    return p;
+  }
 
-  const handleBlur = () => {
-    if (currentValue === '' || isNaN(currentValue)) return;
-    setCurrentValue(parseFloat(currentValue).toFixed(displayDecimals));
-  };
+  // === Schrittweite bestimmen =============================================
+  function getStep(dim) {
+    const tp = Math.abs(dim.tol_plus ?? 0);
+    const tm = Math.abs(dim.tol_minus ?? 0);
+    if ((!isFinite(tp) || tp <= 0) && (!isFinite(tm) || tm <= 0)) return 0.001;
 
+    const dp = getDecimalCount(tp);
+    const dm = getDecimalCount(tm);
+
+    const finerDecimals = Math.max(dp, dm); // mehr Dezimalstellen = feinere Toleranz
+    const step = Math.pow(10, -(finerDecimals + 1));
+    return step;
+  }
+
+  // === Tastatursteuerung ==================================================
   const handleKeyDown = e => {
     switch (e.key) {
       case 'Enter':
       case 'Tab':
         e.preventDefault();
-        handleConfirm();
+        onNext && onNext();
         break;
       case 'ArrowDown':
         e.preventDefault();
@@ -56,57 +65,38 @@ export default function MeasurementFrame({
     }
   };
 
+  // === Confirm-Handler ====================================================
+  const handleConfirm = confirmedValue => {
+    onSave(dim.id, confirmedValue);
+  };
+
   return (
-    <div className='flex w-full h-56 gap-2'>
-      <div className='flex flex-col justify-between flex-1 p-4 border border-gtm-gray-700 rounded-sm bg-gtm-gray-900'>
-        <MeasurementDisplay
+    <div className='flex w-full h-64 gap-2'>
+      <div
+        className='flex flex-col justify-between flex-1 p-4 border border-gtm-gray-700 rounded-sm bg-gtm-gray-900'
+        onKeyDown={handleKeyDown}
+      >
+        <MeasurementLEDDisplay
           nominal={dim.nominal}
           tolPlus={dim.tol_plus}
           tolMinus={dim.tol_minus}
-          value={currentValue}
+          value={
+            dim.measuredValue === null || dim.measuredValue === undefined
+              ? ''
+              : String(dim.measuredValue)
+          }
           unit={dim.unit}
-          onChange={val => setCurrentValue(val)}
+          step={getStep(dim)} // ✅ genaue Schrittweite aus der Regel
+          onConfirm={handleConfirm}
+          displayDecimals={displayDecimals}
+          onReset={() => onSave(dim.id, null)} 
         />
-
-        {/* <div className='flex w-full justify-between items-center max-w-3xl mx-auto'>
-          <div className='flex-grow text-center'>
-            <p className='text-2xl text-gtm-text-200'>
-              Soll: {dim.nominal.toFixed(displayDecimals)} {dim.unit}
-            </p>
-            <p className='text-xl text-gtm-text-400'>
-              Toleranz: +{dim.tol_plus.toFixed(displayDecimals)} / −
-              {dim.tol_minus.toFixed(displayDecimals)}
-            </p>
-          </div>
-
-          <div className='flex gap-4'>
-            <input
-              type='number'
-              inputMode='decimal'
-              step={step}
-              value={currentValue}
-              onChange={e => setCurrentValue(e.target.value)}
-              onBlur={handleBlur}
-              onKeyDown={handleKeyDown}
-              className='text-4xl text-center bg-white text-gtm-text-900 px-6 py-3 rounded-lg w-56 focus:outline-none focus:ring-4 focus:ring-gtm-accent-400'
-              placeholder='Ist-Wert'
-              autoFocus
-            />
-
-            <button
-              onClick={handleConfirm}
-              className='text-xl px-6 py-3 rounded-lg transition-colors bg-gtm-accent-500 hover:bg-gtm-accent-400 text-gtm-text-900'
-            >
-              Weiter
-            </button>
-          </div>
-        </div> */}
       </div>
 
       <div className='flex-none w-[420px]'>
         <MeasurementTool
           tool={measurementTools.find(t => t.id === dim.measurement_tool_id)}
-          connectedDeviceId={connectedDeviceId}
+          connectedDeviceId={null}
         />
       </div>
     </div>

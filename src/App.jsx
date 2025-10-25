@@ -42,35 +42,6 @@ export default function App() {
     }
   }
 
-  // async function loadProductAndDimensions(productId) {
-  //   try {
-  //     const prod = productId
-  //       ? await invoke('get_product_by_id', { productId })
-  //       : await invoke('get_first_product');
-
-  //     if (!prod) {
-  //       console.error('Kein Produkt erhalten');
-  //       setProduct(null);
-  //       setDimensions([]);
-  //       setMode('product');
-  //       return;
-  //     }
-
-  //     const dims = await invoke('get_dimensions_for_product', {
-  //       productId: prod.id,
-  //     });
-
-  //     setProduct(prod);
-  //     setDimensions(dims);
-  //     setMode('dimensions');
-  //   } catch (err) {
-  //     console.error('Fehler beim Laden:', err);
-  //     setProduct(null);
-  //     setDimensions([]);
-  //     setMode('product');
-  //   }
-  // }
-
   // Daten laden beim Start
   useEffect(() => {
     async function init() {

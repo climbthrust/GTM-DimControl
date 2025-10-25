@@ -1,12 +1,7 @@
 import React from 'react';
 import { getPrecisionSettings } from '../utils/getPrecisionSettings';
 
-const DimensionsTable = ({
-  dimensions,
-  values,
-  currentIndex,
-  setCurrentIndex,
-}) => {
+const DimensionsTable = ({ dimensions, currentIndex, setCurrentIndex }) => {
   // === Statusberechnung ===
   const getRowStatus = (dim, value) => {
     if (value === '' || value == null || isNaN(value)) return 'neutral';
@@ -37,19 +32,19 @@ const DimensionsTable = ({
           </div>
 
           {/* Zeilen */}
-          <div className='divide-y divide-gtm-gray-700'>
+          <div className='flex flex-col'>
             {dimensions.map((dim, i) => {
               const { displayDecimals } = getPrecisionSettings(
                 dim.tol_plus,
                 dim.tol_minus
               );
-              const value = values[dim.id];
+              const value = dim.measuredValue;
               const status = getRowStatus(dim, value);
               const active = i === currentIndex;
 
               const bg = active
-                ? 'bg-gtm-gray-800 border-gtm-accent-400'
-                : 'bg-gtm-gray-800 border-transparent hover:bg-gtm-gray-700';
+                ? 'bg-gtm-gray-800 border-2 border-gtm-accent-500 z-10 relative'
+                : 'bg-gtm-gray-800 border-2 border-gtm-gray-700 hover:bg-gtm-gray-700';
 
               let valueClass =
                 'text-right text-lg font-semibold text-gtm-text-400';
@@ -68,7 +63,7 @@ const DimensionsTable = ({
                   key={dim.id}
                   onClick={() => setCurrentIndex(i)}
                   className={`grid grid-cols-[60px_1fr_90px_70px_70px_60px_90px_40px]
-                                        transition-all duration-100 cursor-pointer border-2 ${bg}`}
+                    transition-all duration-100 cursor-pointer ${bg}`}
                 >
                   <div className='p-2'>{dim.id}</div>
                   <div className='p-2'>{dim.name}</div>
