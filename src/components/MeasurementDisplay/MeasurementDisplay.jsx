@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import MeasurementLedPanel from './MeasurementLedPanel';
-import MeasurementLeftButtons from './MeasurementLeftButtons';
-import MeasurementScaleSVG from './MeasurementScaleSVG';
-import MeasurementSpinner from './MeasurementSpinner';
-import { Check } from 'lucide-react';
+import MeasurementScaleSVG from './Scale/MeasurementScaleSVG';
+import GTMButton from '../Basics/GTMButton';
+import Scale from './Scale/Scale';
 
 export default function MeasurementDisplay({
   nominal,
@@ -61,60 +60,57 @@ export default function MeasurementDisplay({
     setDirty(false);
   };
 
+  // === Einheitliche Breite für LED + Skala ===
+  const DISPLAY_WIDTH = 420;
+  const DISPLAY_HEIGHT = 100;
+
   return (
-    <div className='flex flex-col items-stretch justify-between w-full h-full gap-3 select-none'>
-      {/* === Zeile 1: Reset | LED | Spinner === */}
-      <div className='grid grid-cols-[auto,1fr,auto] items-center w-full gap-4'>
-        <MeasurementLeftButtons onReset={resetValue} />
-
-        <div className='flex-grow w-full'>
-          <MeasurementLedPanel
-            nominal={nominal}
-            tolPlus={tolPlus}
-            tolMinus={tolMinus}
-            value={currentValue}
-            state={state}
-            step={step}
-            dirty={dirty}
-          />
-        </div>
-
-        <MeasurementSpinner
-          step={step}
-          onUp={() => adjustValue(+1)}
-          onDown={() => adjustValue(-1)}
+    <div className='grid grid-rows-2 grid-cols-[auto,420px,auto] gap-x-2 gap-y-4 items-center justify-items-center'>
+      {/* === Zeile 1 === */}
+      <div className='flex justify-end w-full'>
+        <GTMButton
+          icon='reset'
+          onClick={resetValue}
+          title='Messung zurücksetzen'
         />
       </div>
 
-      {/* === Zeile 2: leer | Skala | OK === */}
-      <div className='grid grid-cols-[auto,1fr,auto] items-end w-full gap-4'>
-        <div></div>
+      <div style={{ width: DISPLAY_WIDTH }}>
+        <MeasurementLedPanel
+          nominal={nominal}
+          tolPlus={tolPlus}
+          tolMinus={tolMinus}
+          value={currentValue}
+          state={state}
+        />
+      </div>
 
-        <div className='flex-grow w-full'>
-          <MeasurementScaleSVG
-            nominal={nominal}
-            tolPlus={tolPlus}
-            tolMinus={tolMinus}
-            value={currentValue}
-            state={state}
-            width={800} // bleibt als Referenzgröße für viewBox
-            height={100}
-          />
-        </div>
+      <div className='flex flex-col justify-between items-start w-full h-full'>
+        <GTMButton icon='up' onClick={() => adjustValue(+1)} />
+        <GTMButton icon='down' onClick={() => adjustValue(-1)} />
+      </div>
 
-        <button
-          type='button'
+      {/* === Zeile 2 === */}
+      <div></div>
+
+      <div style={{ width: DISPLAY_WIDTH }}>
+        <Scale
+          nominal={nominal}
+          tolPlus={tolPlus}
+          tolMinus={tolMinus}
+          value={currentValue}
+          state={state}
+        />
+      </div>
+
+      <div className='flex justify-start w-full'>
+        <GTMButton
+          icon='ok'
+          active={dirty}
           disabled={!dirty}
-          className={`w-9 h-9 flex items-center justify-center border border-gtm-gray-800 rounded-sm  select-none transition duration-300 ${
-            dirty
-              ? 'bg-gtm-accent-500 hover:bg-gtm-accent-600 text-gtm-text-900'
-              : 'border-gtm-gray-800 text-gtm-gray-800'
-          }`}
-          title='Messwert bestätigen'
           onClick={confirmValue}
-        >
-          <Check size={18} />
-        </button>
+          title='Messwert bestätigen'
+        />
       </div>
     </div>
   );

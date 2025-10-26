@@ -35,33 +35,33 @@ export default function MeasurementLedPanel({
 
   // === Render ===============================================================
   return (
-    <div className='flex items-center justify-center w-full h-full p-2'>
+    // <div className='flex items-center justify-center w-full h-full'>
+    <div
+      className='relative bg-black rounded-md flex items-center justify-center overflow-hidden'
+      style={{
+        width: `${PANEL_WIDTH}px`,
+        height: `${PANEL_HEIGHT}px`,
+        border: `1px solid ${BORDER_COLOR}`,
+        boxShadow: BOX_SHADOW,
+      }}
+    >
       <div
-        className='relative bg-black rounded-md flex items-center justify-center overflow-hidden'
+        className='flex items-center justify-center'
         style={{
-          width: `${PANEL_WIDTH}px`,
-          height: `${PANEL_HEIGHT}px`,
-          border: `1px solid ${BORDER_COLOR}`,
-          boxShadow: BOX_SHADOW,
+          gap: `${DIGIT_GAP_REM}rem`,
+          width: `${CONTENT_WIDTH * 100}%`,
+          height: `${CONTENT_HEIGHT * 100}%`,
         }}
       >
-        <div
-          className='flex items-center justify-center'
-          style={{
-            gap: `${DIGIT_GAP_REM}rem`,
-            width: `${CONTENT_WIDTH * 100}%`,
-            height: `${CONTENT_HEIGHT * 100}%`,
-          }}
-        >
-          {formatted.left.split('').map((char, i) => (
-            <SevenSegmentDigit key={`L${i}`} char={char} color={ledColor} />
-          ))}
-          <DecimalPoint color={ledColor} />
-          {formatted.right.split('').map((char, i) => (
-            <SevenSegmentDigit key={`R${i}`} char={char} color={ledColor} />
-          ))}
-        </div>
+        {formatted.left.split('').map((char, i) => (
+          <SevenSegmentDigit key={`L${i}`} char={char} color={ledColor} />
+        ))}
+        <DecimalPoint color={ledColor} />
+        {formatted.right.split('').map((char, i) => (
+          <SevenSegmentDigit key={`R${i}`} char={char} color={ledColor} />
+        ))}
       </div>
     </div>
+    // </div>
   );
 }

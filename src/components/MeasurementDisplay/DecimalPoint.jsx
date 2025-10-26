@@ -3,11 +3,15 @@ import React from 'react';
 export default function DecimalPoint({ color = '#f20d0d' }) {
   return (
     <svg
-      width='30'
-      height='140'
-      viewBox='0 0 90 447'
+      viewBox='0 0 84 447'
       xmlns='http://www.w3.org/2000/svg'
-      style={{ display: 'block' }}
+      preserveAspectRatio='xMidYMid meet'
+      style={{
+        display: 'block',
+        width: '33.3%', // ← füllt Parent aus
+        height: '100%', // ← skaliert mit Höhe
+        flex: '1 1 auto', // ← lässt sich flexibel dehnen
+      }}
     >
       {/* Dezimalpunkt */}
 

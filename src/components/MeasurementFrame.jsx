@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import MeasurementTool from './MeasurementTool';
 import { getPrecisionSettings } from '../utils/getPrecisionSettings';
-import MeasurementLEDDisplay from './MeasurementLEDDisplay/MeasurementLEDDisplay';
+import MeasurementDisplay from './MeasurementDisplay/MeasurementDisplay';
 
 export default function MeasurementFrame({
   dim,
@@ -76,7 +76,7 @@ export default function MeasurementFrame({
         className='flex flex-col justify-between flex-1 p-4 border border-gtm-gray-700 rounded-sm bg-gtm-gray-900'
         onKeyDown={handleKeyDown}
       >
-        <MeasurementLEDDisplay
+        <MeasurementDisplay
           nominal={dim.nominal}
           tolPlus={dim.tol_plus}
           tolMinus={dim.tol_minus}
@@ -89,7 +89,7 @@ export default function MeasurementFrame({
           step={getStep(dim)} // ✅ genaue Schrittweite aus der Regel
           onConfirm={handleConfirm}
           displayDecimals={displayDecimals}
-          onReset={() => onSave(dim.id, null)} 
+          onReset={() => onSave(dim.id, null)}
         />
       </div>
 
