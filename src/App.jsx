@@ -73,11 +73,11 @@ export default function App() {
   // --------------------------------------------------
   // Layout bleibt statisch — nur Inhalt ändert sich
   return (
-    <div className='w-screen h-screen'>
+    <div className='w-[1264px] min-w-[1264px] h-full overflow-auto '>
       <div
-        className='flex flex-col w-screen h-screen gap-2 p-4
-                      bg-gtm-gray-900 text-gtm-text-100 font-sans
-                      selection:bg-gtm-accent-400 selection:text-gtm-text-900'
+        className='flex flex-col w-full h-full gap-2 p-4
+                 bg-gtm-gray-900 text-gtm-text-100 font-sans
+                 selection:bg-gtm-accent-400 selection:text-gtm-text-900'
       >
         <div className='flex-none h-48'>
           <ProductData
@@ -86,6 +86,7 @@ export default function App() {
             highlighted={mode === 'product'}
           />
         </div>
+
         <div className='flex-grow min-h-0'>
           <Dimensions
             dimensions={dimensions}
@@ -93,6 +94,7 @@ export default function App() {
             highlighted={mode === 'dimensions'}
           />
         </div>
+
         <div className='flex-none'>
           <SaveReport
             product={product}

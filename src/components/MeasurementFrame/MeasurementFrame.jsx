@@ -71,9 +71,9 @@ export default function MeasurementFrame({
   };
 
   return (
-    <div className='flex w-full h-64 gap-2'>
+    <div className='grid grid-cols-[1fr_minmax(240px,1fr)] w-full h-64 gap-2'>
       <div
-        className='flex flex-col justify-between flex-1 p-4 border border-gtm-gray-700 rounded-sm bg-gtm-gray-900'
+        className='flex flex-col justify-between p-4 border border-gtm-gray-700 rounded-sm bg-gtm-gray-900'
         onKeyDown={handleKeyDown}
       >
         <MeasurementDisplay
@@ -93,12 +93,10 @@ export default function MeasurementFrame({
         />
       </div>
 
-      <div className='flex-none w-[420px]'>
-        <MeasurementTool
-          tool={measurementTools.find(t => t.id === dim.measurement_tool_id)}
-          connectedDeviceId={null}
-        />
-      </div>
+      <MeasurementTool
+        tool={measurementTools.find(t => t.id === dim.measurement_tool_id)}
+        connectedDeviceId={null}
+      />
     </div>
   );
 }

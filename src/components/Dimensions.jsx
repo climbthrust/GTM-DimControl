@@ -50,6 +50,7 @@ export default function Dimensions({
 
   const currentDim = dimensionsWithValues?.[currentIndex] || null;
 
+  // Dimensions.jsx
   return (
     <Frame highlighted={highlighted}>
       <div className='flex flex-col gap-2 items-center justify-center w-full h-full'>
@@ -57,10 +58,10 @@ export default function Dimensions({
           {currentDim?.name}
         </div>
 
-        <div className='flex w-full h-full gap-2'>
-          {/* === Linke Seite: Messung + Grid === */}
-          <div className='flex flex-col w-2/3 h-full gap-2 min-h-0'>
-            {/* Mess-Frame */}
+        {/* --- Layout fix: grid statt flex --- */}
+        <div className='flex gap-2 w-full h-full'>
+          {/* === Spalte 1: Messung + Tabelle === */}
+          <div className='flex flex-col gap-2 min-h-0'>
             <div className='flex-none'>
               {currentDim && (
                 <MeasurementFrame
@@ -74,7 +75,6 @@ export default function Dimensions({
               )}
             </div>
 
-            {/* === Grid-Tabelle === */}
             <div className='flex-1 overflow-auto rounded-sm min-h-0'>
               <DimensionsTable
                 dimensions={dimensionsWithValues}
@@ -84,11 +84,12 @@ export default function Dimensions({
             </div>
           </div>
 
-          {/* === Rechte Seite: Bildbereich === */}
-          <div className='flex w-1/3 h-full min-h-0'>
-            <div className='w-full h-full border border-gtm-gray-700 bg-gtm-gray-800 rounded-sm flex items-center justify-center'>
-              <p className='text-gtm-text-400'>Kein Bild</p>
-            </div>
+          {/* === Spalte 2: (MeasurementTool ist in MeasurementFrame enthalten) === */}
+          {/* entfällt, da schon integriert */}
+
+          {/* === Spalte 3: Bildbereich === */}
+          <div className='w-full border border-gtm-gray-700 bg-gtm-gray-800 rounded-sm flex items-center justify-center'>
+            <p className='text-gtm-text-400'>Kein Bild</p>
           </div>
         </div>
       </div>

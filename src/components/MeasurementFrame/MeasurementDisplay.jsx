@@ -104,10 +104,12 @@ export default function MeasurementDisplay({
     setDirty(false);
   };
 
-  const DISPLAY_WIDTH = 420;
+  const DISPLAY_WIDTH = 360;
 
   return (
-    <div className='grid grid-rows-2 grid-cols-[auto,420px,auto] gap-x-2 gap-y-4 items-center justify-items-center select-none'>
+    <div
+      className={`grid grid-rows-2 grid-cols-[auto,360px,auto] gap-x-2 gap-y-4 items-center justify-items-center select-none`}
+    >
       {/* === Zeile 1 === */}
       <div className='flex justify-end w-full'>
         <GTMButton
@@ -124,6 +126,7 @@ export default function MeasurementDisplay({
           tolMinus={tolMinus}
           value={currentValue}
           state={state}
+          width={DISPLAY_WIDTH}
         />
       </div>
 
@@ -156,6 +159,7 @@ export default function MeasurementDisplay({
           tolMinus={tolMinus}
           value={currentValue}
           state={state}
+          width={DISPLAY_WIDTH}
         />
       </div>
 

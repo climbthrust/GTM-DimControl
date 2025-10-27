@@ -56,11 +56,11 @@ const MeasurementTool = ({ tool, connectedDeviceId }) => {
           </div>
 
           {/* Bild (immer Platzhalter zeigen, falls kein Bild) */}
-          <div className='h-28 flex items-center justify-center border border-gtm-gray-700 bg-gtm-gray-800 rounded-sm'>
+          <div className='h-28 flex items-center justify-center '>
             {imgUrl ? (
               <img
                 src={imgUrl}
-                alt={name || 'Produktbild'}
+                alt={name || 'Bild Mess-Instrument'}
                 className='h-full w-auto max-w-full object-contain rounded'
               />
             ) : (

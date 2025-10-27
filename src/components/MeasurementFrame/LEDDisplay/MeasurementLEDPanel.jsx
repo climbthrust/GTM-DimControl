@@ -8,9 +8,10 @@ export default function MeasurementLedPanel({
   tolMinus,
   value,
   state,
+  width,
 }) {
   // === Layout-Konstanten (zentral änderbar) ================================
-  const PANEL_WIDTH = 420; // px
+  const PANEL_WIDTH = width; // px
   const PANEL_HEIGHT = 100; // px
   const CONTENT_WIDTH = 0.9; // 90 % des Panels
   const CONTENT_HEIGHT = 0.7; // 70 % des Panels

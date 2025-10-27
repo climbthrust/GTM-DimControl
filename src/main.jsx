@@ -5,6 +5,8 @@ import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <App />
+    <div className='bg-gtm-gray-900 flex justify-center'>
+      <App />
+    </div>
   </React.StrictMode>
 );
