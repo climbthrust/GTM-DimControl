@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import MeasurementLedPanel from './LEDDisplay/MeasurementLEDPanel';
 import GTMButton from '../Basics/GTMButton';
 import Scale from './Scale/Scale';
@@ -20,6 +20,16 @@ export default function MeasurementDisplay({
   const [state, setState] = useState('neutral');
   const [dirty, setDirty] = useState(false);
 
+  const holdTimeout = useRef(null);
+  const repeatInterval = useRef(null);
+  const speedUpTimeout = useRef(null);
+
+  const updateState = val => {
+    const lower = nominal - tolMinus;
+    const upper = nominal + tolPlus;
+    setState(val < lower || val > upper ? 'fail' : 'ok');
+  };
+
   useEffect(() => {
     if (value === '' || value == null || isNaN(value)) {
       setCurrentValue(nominal || 0);
@@ -33,21 +43,56 @@ export default function MeasurementDisplay({
     }
   }, [value, nominal, tolPlus, tolMinus]);
 
-  const updateState = val => {
-    const lower = nominal - tolMinus;
-    const upper = nominal + tolPlus;
-    setState(val < lower || val > upper ? 'fail' : 'ok');
-  };
+  useEffect(() => {
+    return () => {
+      // falls du holdTimeout/repeatInterval Refs hast:
+      clearTimeout(holdTimeout.current);
+      clearInterval(repeatInterval.current);
+    };
+  }, []);
 
   const adjustValue = direction => {
-    const newVal = parseFloat((currentValue + direction * step).toFixed(6));
-    setCurrentValue(newVal);
-    updateState(newVal);
-    setDirty(true);
-    onChange?.(newVal);
+    setCurrentValue(prev => {
+      const next = parseFloat((prev + direction * step).toFixed(6));
+      updateState(next);
+      setDirty(true);
+      onChange?.(next);
+      return next;
+    });
+  };
+
+  // === Press & Hold mit Speed-Up, ohne Nachlauf ===
+  const startHold = direction => {
+    adjustValue(direction); // sofort einmal reagieren
+
+    holdTimeout.current = setTimeout(() => {
+      let interval = 100; // Intervall beim Start
+      let accelFactor = 5; // Zählung wird um diesen Faktor beschleunigt
+      repeatInterval.current = setInterval(
+        () => adjustValue(direction),
+        interval
+      );
+
+      // Speed-Up-Timer separat merken, damit wir ihn stoppen können
+      speedUpTimeout.current = setTimeout(() => {
+        clearInterval(repeatInterval.current);
+        interval = interval / accelFactor;
+        repeatInterval.current = setInterval(
+          () => adjustValue(direction),
+          interval
+        );
+      }, 1500);
+    }, 400);
+  };
+
+  const stopHold = () => {
+    clearTimeout(holdTimeout.current);
+    clearTimeout(speedUpTimeout.current);
+    clearInterval(repeatInterval.current);
   };
 
   const resetValue = () => {
+    console.log('resetValue');
     onReset?.();
     setCurrentValue(nominal || 0);
     setState('neutral');
@@ -59,12 +104,10 @@ export default function MeasurementDisplay({
     setDirty(false);
   };
 
-  // === Einheitliche Breite für LED + Skala ===
   const DISPLAY_WIDTH = 420;
-  const DISPLAY_HEIGHT = 100;
 
   return (
-    <div className='grid grid-rows-2 grid-cols-[auto,420px,auto] gap-x-2 gap-y-4 items-center justify-items-center'>
+    <div className='grid grid-rows-2 grid-cols-[auto,420px,auto] gap-x-2 gap-y-4 items-center justify-items-center select-none'>
       {/* === Zeile 1 === */}
       <div className='flex justify-end w-full'>
         <GTMButton
@@ -85,8 +128,22 @@ export default function MeasurementDisplay({
       </div>
 
       <div className='flex flex-col justify-between items-start w-full h-full'>
-        <GTMButton icon='up' onClick={() => adjustValue(+1)} />
-        <GTMButton icon='down' onClick={() => adjustValue(-1)} />
+        <GTMButton
+          icon='up'
+          onMouseDown={() => startHold(+1)}
+          onMouseUp={stopHold}
+          onMouseLeave={stopHold}
+          onTouchStart={() => startHold(+1)}
+          onTouchEnd={stopHold}
+        />
+        <GTMButton
+          icon='down'
+          onMouseDown={() => startHold(-1)}
+          onMouseUp={stopHold}
+          onMouseLeave={stopHold}
+          onTouchStart={() => startHold(-1)}
+          onTouchEnd={stopHold}
+        />
       </div>
 
       {/* === Zeile 2 === */}

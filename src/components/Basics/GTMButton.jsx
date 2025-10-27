@@ -12,6 +12,7 @@ import { RotateCcw, Check, ChevronUp, ChevronDown } from 'lucide-react';
  * - title: string (Tooltip)
  * - onClick: function
  * - size: number (optional, default = 36)
+ * - ...rest: alle weiteren Event-Handler (z. B. onMouseDown, onTouchStart)
  */
 export default function GTMButton({
   icon = 'reset',
@@ -20,8 +21,8 @@ export default function GTMButton({
   title = '',
   onClick,
   size = 36,
+  ...rest
 }) {
-  // === Icon-Auswahl ==========================================================
   const icons = {
     reset: RotateCcw,
     ok: Check,
@@ -30,7 +31,6 @@ export default function GTMButton({
   };
   const IconComponent = icons[icon] || RotateCcw;
 
-  // === Grundklassen ==========================================================
   const base =
     'flex items-center justify-center border rounded-md select-none transition duration-300';
   const stateClass = disabled
@@ -39,13 +39,13 @@ export default function GTMButton({
     ? 'bg-gtm-accent-500 hover:bg-gtm-accent-600 text-gtm-text-900 border-gtm-accent-500'
     : 'border-gtm-gray-700 text-gtm-gray-700 hover:bg-gtm-accent-600';
 
-  // === Render ================================================================
   return (
     <button
       type='button'
       title={title}
       disabled={disabled}
       onClick={onClick}
+      {...rest} // ⬅️ alle weiteren Events (mouse/touch)
       className={`${base} ${stateClass}`}
       style={{ width: size, height: size }}
     >
