@@ -7,8 +7,8 @@ import {
   AlertCircle,
   SquarePen,
 } from 'lucide-react';
-import Notes from './Notes';
-import GTMImage from './GTMImage';
+import Notes from '../Notes';
+import GTMImage from '../GTMImage';
 
 const MeasurementTool = ({ tool, connectedDeviceId }) => {
   const BASE_URL = import.meta.env.VITE_BASE_URL;

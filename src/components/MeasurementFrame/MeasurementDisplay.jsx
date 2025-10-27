@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import MeasurementLedPanel from './MeasurementLedPanel';
-import MeasurementScaleSVG from './Scale/MeasurementScaleSVG';
+import MeasurementLedPanel from './LEDDisplay/MeasurementLEDPanel';
 import GTMButton from '../Basics/GTMButton';
 import Scale from './Scale/Scale';
 

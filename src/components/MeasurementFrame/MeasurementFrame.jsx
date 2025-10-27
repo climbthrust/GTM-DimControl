@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import MeasurementTool from './MeasurementTool';
-import { getPrecisionSettings } from '../utils/getPrecisionSettings';
-import MeasurementDisplay from './MeasurementDisplay/MeasurementDisplay';
+import { getPrecisionSettings } from '../../utils/getPrecisionSettings';
+import MeasurementDisplay from './MeasurementDisplay';
 
 export default function MeasurementFrame({
   dim,

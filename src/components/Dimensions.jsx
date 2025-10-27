@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Frame from './Frame';
 import GTMImage from './GTMImage';
-import MeasurementFrame from './MeasurementFrame';
+import MeasurementFrame from './MeasurementFrame/MeasurementFrame';
 import DimensionsTable from './DimensionsTable';
 
 export default function Dimensions({
