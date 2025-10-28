@@ -1,15 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Frame from './Frame';
-import GTMImage from './GTMImage';
 import Notes from './Notes';
-import { X } from 'lucide-react';
+import GTMButton from './basics/GTMButton';
 
 export default function ProductData({
   product,
-  setProduct,
   onLoadBySerial,
-  onUnload, // 👈 neu: optionaler Callback zum Aufräumen
   highlighted,
+  onUnload,
 }) {
   const [serial, setSerial] = useState('');
   const [loading, setLoading] = useState(false);
@@ -17,48 +15,20 @@ export default function ProductData({
 
   const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-  // const handleLoad = async () => {
-  //   if (!serial.trim()) return;
-  //   setLoading(true);
-  //   setError('');
-
-  //   try {
-  //     const res = await fetch(
-  //       `${BASE_URL}/api/get-product-by-serial/${encodeURIComponent(
-  //         serial.trim()
-  //       )}`
-  //     );
-  //     if (!res.ok) throw new Error('Produkt nicht gefunden');
-  //     const data = await res.json();
-  //     setProduct(data);
-  //   } catch (err) {
-  //     setError(err.message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  const handleUnload = () => {
-    if (confirm('Aktuelles Produkt wirklich entladen?')) {
-      setProduct(null);
-      if (onUnload) onUnload(); // z. B. Dimensions löschen
-    }
-  };
-
   // ------------------------------------------------------------
   // Kein Produkt geladen → Eingabemaske anzeigen
   if (!product) {
     return (
       <Frame highlighted={highlighted}>
-        <div className='flex flex-col items-center justify-center w-full h-full gap-4 text-gtm-text-200'>
-          <div className='text-xl font-semibold text-gtm-text-100'>
+        <div className='flex flex-col items-center justify-center w-full h-full gap-4 text-gtm-gray-200'>
+          <div className='text-xl font-semibold text-gtm-gray-100'>
             Kein Produkt geladen
           </div>
           <div className='flex gap-2'>
             <input
               type='text'
               placeholder='Seriennummer'
-              className='bg-gtm-gray-800 border border-gtm-gray-700 text-gtm-text-100 rounded px-3 py-2 w-64 focus:outline-none focus:border-gtm-accent-400'
+              className='bg-gtm-gray-800 border border-gtm-gray-700 text-gtm-gray-100 rounded px-3 py-2 w-64 focus:outline-none focus:border-gtm-accent-400'
               value={serial}
               onChange={e => setSerial(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && onLoadBySerial(serial)}
@@ -66,7 +36,7 @@ export default function ProductData({
             <button
               onClick={() => onLoadBySerial(serial)}
               disabled={loading}
-              className='px-4 py-2 bg-gtm-accent-500 text-gtm-text-900 rounded hover:bg-gtm-accent-400 transition'
+              className='px-4 py-2 bg-gtm-accent-500 text-gtm-gray-900 rounded hover:bg-gtm-accent-400 transition'
             >
               {loading ? 'Lädt...' : 'Laden'}
             </button>
@@ -89,33 +59,45 @@ export default function ProductData({
 
   return (
     <Frame highlighted={highlighted}>
-      <div className=' flex w-full h-full gap-4'>
+      <div className='flex w-full h-full gap-4'>
         {/* Produktinfos */}
         <div className='flex-1 flex flex-col gap-4 justify-between'>
-          <div className='flex gap-4 mb-2 flex-grow justify-between'>
-            <h1 className='text-gtm-text-200 text-6xl'>
-              {product.serial_number || '–'}
-            </h1>
-            {/* <button onClick={handleUnload}>
-                <X className='absolute -right-4 -top-2 bg-gtm-fail-700 w-5 h-5 rounded-full border border-gtm-gray-300' />
-              </button> */}
+          <div className='flex items-center justify-between'>
+            <div className='flex items-center gap-3'>
+              <div className='mt-2'>
+                <GTMButton
+                  icon='delete'
+                  title='Produkt entladen'
+                  onClick={onUnload}
+                />
+              </div>
+              <h1 className='text-gtm-gray-200 text-6xl'>
+                {product.serial_number || '–'}
+              </h1>
+            </div>
             <div>
-              <div className='text-base font-semibold text-gtm-text-300 rounded-full px-3 py-1 bg-gtm-gray-800'>
+              <div className='text-base font-semibold text-gtm-gray-300 rounded-full px-3 py-1 bg-gtm-gray-800'>
                 Serie {series || '–'} / {product_type || '–'}
               </div>
             </div>
           </div>
-          <Notes>{notes}</Notes>
+          {notes && <Notes>{notes}</Notes>}
         </div>
 
         {/* Produktbild */}
-        <GTMImage
-          width=''
-          imgUrl={imgUrl}
-          name={name}
-          bordered={false}
-          align='justify-end'
-        />
+        <div className='rounded-sm flex items-center justify-center overflow-hidden h-full w-auto'>
+          {imgUrl ? (
+            <img
+              src={imgUrl}
+              alt={name || 'Produktbild'}
+              className='max-w-full max-h-full object-contain rounded'
+            />
+          ) : (
+            <div className='h-full rounded-sm border border-gtm-gray-700 w-48 flex items-center justify-center'>
+              <p className='text-gtm-gray-500'>Kein Bild</p>
+            </div>
+          )}
+        </div>
       </div>
     </Frame>
   );

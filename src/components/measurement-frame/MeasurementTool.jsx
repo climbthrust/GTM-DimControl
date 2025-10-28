@@ -64,12 +64,12 @@ const MeasurementTool = ({ tool, connectedDeviceId }) => {
                 className='h-full w-auto max-w-full object-contain rounded'
               />
             ) : (
-              <p className='text-gtm-text-400'>Kein Bild</p>
+              <p className='text-gtm-gray-400'>Kein Bild</p>
             )}
           </div>
         </div>
       ) : (
-        <div className='grow w-full h-full flex items-center justify-center text-gtm-text-400 text-sm rounded-sm'>
+        <div className='grow w-full h-full flex items-center justify-center text-gtm-gray-600 italic text-base rounded-sm'>
           Kein Messgerät zugeordnet
         </div>
       )}

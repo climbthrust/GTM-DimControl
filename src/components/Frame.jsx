@@ -4,10 +4,10 @@ const Frame = ({ children, highlighted = false }) => {
   return (
     <div
       className={
-        'w-full h-full rounded p-4 transition-all duration-200 ' +
+        'relative w-full h-full rounded p-4 border-4 transition-all duration-200 ' +
         (highlighted
-          ? 'border-4 border-gtm-accent-400'
-          : 'border border-gtm-gray-700')
+          ? 'border-gtm-accent-400'
+          : 'border-transparent before:content-[""] before:absolute before:inset-[-3px] before:rounded before:border before:border-gtm-gray-700 before:pointer-events-none')
       }
     >
       {children}

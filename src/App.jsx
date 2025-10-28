@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import ProductData from './components/ProductData';
 import Dimensions from './components/Dimensions';
-import SaveReport from './components/SaveReport'; // optional, wenn du später speicherst
+import SaveReport from './components/SaveReport';
 
 export default function App() {
   const [mode, setMode] = useState('product'); // 'product' | 'dimensions' | 'save'
@@ -11,7 +11,6 @@ export default function App() {
   const [measurementTools, setMeasurementTools] = useState([]);
 
   // --------------------------------------------------
-
   async function loadProductBySerial(serialNumber) {
     try {
       const prod = await invoke('get_product_by_serial', { serialNumber });
@@ -36,70 +35,58 @@ export default function App() {
     try {
       const tools = await invoke('load_all_measurement_tools');
       setMeasurementTools(tools);
-      console.log('Tools geladen:', tools);
     } catch (err) {
       console.error('Fehler beim Laden der Measurement Tools:', err);
     }
   }
 
-  // Daten laden beim Start
+  // --------------------------------------------------
+  function handleUnloadProduct() {
+    setProduct(null);
+    setDimensions([]);
+    setMode('product');
+  }
+
+  // --------------------------------------------------
   useEffect(() => {
-    async function init() {
-      // await loadProductAndDimensions();
-      await loadAllMeasurementTools();
-    }
-    init();
+    loadAllMeasurementTools();
   }, []);
 
   // --------------------------------------------------
-  // Key Listener auf App-Ebene
-  useEffect(() => {
-    const handleKeyDown = e => {
-      if (mode === 'product' && product) {
-        setMode('dimensions');
-      } else if (mode === 'dimensions') {
-        // Beispiel: Wenn alle gemessen → Mode save
-        const allMeasured = dimensions.every(d => d.measured_value != null);
-        if (allMeasured) setMode('save');
-      } else if (mode === 'save' && e.key === 'Enter') {
-        console.log('Speichervorgang ausgelöst');
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [mode, product, dimensions]);
-
-  // --------------------------------------------------
-  // Layout bleibt statisch — nur Inhalt ändert sich
   return (
-    <div className='w-[1264px] min-w-[1264px] h-full overflow-auto '>
+    <div className='w-[1264px] min-w-[1264px] h-full overflow-auto'>
       <div
         className='flex flex-col w-full h-full gap-2 p-4
-                 bg-gtm-gray-900 text-gtm-text-100 font-sans
-                 selection:bg-gtm-accent-400 selection:text-gtm-text-900'
+                   bg-gtm-gray-900 text-gtm-gray-100 font-sans
+                   selection:bg-gtm-accent-400 selection:text-gtm-gray-900'
       >
+        {/* Produktdaten */}
         <div className='flex-none h-48'>
           <ProductData
             product={product}
             onLoadBySerial={loadProductBySerial}
+            onUnload={handleUnloadProduct}
             highlighted={mode === 'product'}
           />
         </div>
 
+        {/* Messungen */}
         <div className='flex-grow min-h-0'>
           <Dimensions
             dimensions={dimensions}
             measurementTools={measurementTools}
             highlighted={mode === 'dimensions'}
+            onAllMeasured={() => setMode('save')} // <=== neu
           />
         </div>
 
+        {/* Bericht */}
         <div className='flex-none'>
           <SaveReport
             product={product}
             dimensions={dimensions}
             highlighted={mode === 'save'}
+            mode={mode}
           />
         </div>
       </div>

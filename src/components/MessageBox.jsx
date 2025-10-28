@@ -30,7 +30,7 @@ export default function MessageBox({ type = 'ok', text, onClose }) {
       className='fixed inset-0 flex items-center justify-center bg-black/50 z-50'
     >
       <div
-        className={`relative flex items-center gap-4 p-6 rounded-lg shadow-xl border ${borderColor} bg-gtm-gray-800 text-gtm-text-100 `}
+        className={`relative flex items-center gap-4 p-6 rounded-lg shadow-xl border ${borderColor} bg-gtm-gray-800 text-gtm-gray-100 `}
       >
         <div className='flex items-center'>
           {isOk ? (
@@ -49,7 +49,7 @@ export default function MessageBox({ type = 'ok', text, onClose }) {
 
         <button
           onClick={onClose}
-          className='absolute top-3 right-3 text-gtm-text-400 hover:text-gtm-text-200'
+          className='absolute top-3 right-3 text-gtm-gray-400 hover:text-gtm-gray-200'
         >
           <X size={18} />
         </button>

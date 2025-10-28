@@ -20,7 +20,7 @@ const GTMImage = ({
           className='max-w-full max-h-full object-contain rounded'
         />
       ) : (
-        <p className='text-gtm-text-400'>Kein Bild</p>
+        <p className='text-gtm-gray-400'>Kein Bild</p>
       )}
     </div>
   );

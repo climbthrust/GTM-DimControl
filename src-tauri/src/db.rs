@@ -26,10 +26,10 @@ fn get_db_path() -> PathBuf {
 pub struct Product {
     pub id: i32,
     pub name: String,
-    pub series: String,
-    pub product_type: String,
-    pub image_file_name: String,
-    pub notes: String,
+    pub series: Option<String>,
+    pub product_type: Option<String>,
+    pub image_file_name: Option<String>,
+    pub notes: Option<String>,
     pub serial_number: String,
 }
 
@@ -192,7 +192,10 @@ pub fn get_product_by_serial(serial_number: String) -> Result<Product, String> {
                 serial_number: row.get(6)?,
             })
         })
-        .map_err(|_| "Seriennummer nicht gefunden".to_string())?;
+        .map_err(|e| match e {
+            rusqlite::Error::QueryReturnedNoRows => "Seriennummer nicht gefunden".to_string(),
+            _ => format!("Fehler beim Laden des Produkts: {e}"),
+        })?;
 
     Ok(product)
 }

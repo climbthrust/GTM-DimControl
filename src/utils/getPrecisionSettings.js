@@ -14,8 +14,9 @@ function inferDecimals(n, maxDigits = precisionConfig.maxDecimals) {
 export function getPrecisionSettings(tolPlus, tolMinus) {
   const dPlus = inferDecimals(Math.abs(tolPlus || 0));
   const dMinus = inferDecimals(Math.abs(tolMinus || 0));
-  const displayDecimals = Math.max(dPlus, dMinus);
+  let displayDecimals = Math.max(dPlus, dMinus);
   const inputDecimals = displayDecimals + precisionConfig.inputExtraPrecision;
   const step = Math.pow(10, -inputDecimals);
+  displayDecimals = inputDecimals; // Testweise die Anzeige genauso genau wie Input
   return { displayDecimals, inputDecimals, step };
 }

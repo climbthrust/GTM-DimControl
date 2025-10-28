@@ -35,18 +35,7 @@ export default {
         900: '#1c1c1c',
       },
 
-      // Textfarben
-      'gtm-text': {
-        100: '#f5f5f5',
-        200: '#e6e6e6',
-        300: '#bfbfbf',
-        400: '#808080',
-        500: '#3c3c3b', // Standard-Textfarbe
-        600: '#2e2e2d',
-        700: '#222221',
-        800: '#181817',
-        900: '#0f0f0e',
-      },
+      
       'gtm-ok': {
         100: '#e0f4e0',
         200: '#b4e1b4',
