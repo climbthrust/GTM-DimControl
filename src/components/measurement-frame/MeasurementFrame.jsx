@@ -8,6 +8,7 @@ export default function MeasurementFrame({
   onSave,
   onNext,
   measurementTools = [],
+  openToolModal,
 }) {
   // Falls dim null, undefined oder leer → mit Defaults füllen
   if (!dim || Object.keys(dim).length === 0) {
@@ -65,7 +66,7 @@ export default function MeasurementFrame({
 
   const handleConfirm = confirmedValue => {
     onSave?.(id, confirmedValue);
-    // onNext?.();
+    onNext?.();
   };
 
   const handleReset = () => {
@@ -95,6 +96,7 @@ export default function MeasurementFrame({
       <MeasurementTool
         tool={measurementTools.find(t => t.id === measurement_tool_id) || null}
         connectedDeviceId={null}
+        onChangeTool={() => openToolModal(dim)}
       />
     </div>
   );

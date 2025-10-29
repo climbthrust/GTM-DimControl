@@ -1,20 +1,15 @@
 import React from 'react';
 import Frame from './Frame';
+import GTMButton from './basics/GTMButton';
 
-const SaveReport = ({ highlighted,mode }) => {
+const SaveReport = ({ highlighted, mode }) => {
   return (
     <div>
       <Frame highlighted={highlighted}>
         <div className='flex justify-center items-center'>
-          <button
-            className={`text-xl px-6 py-3 rounded-lg transition-colors cursor-pointer duration-300 ${
-              mode == 'save'
-                ? ' bg-gtm-accent-500 hover:bg-gtm-accent-400 text-gtm-gray-900'
-                : ' bg-gtm-gray-900 text-gtm-gray-300 border border-gtm-accent-500 hover:bg-gtm-accent-500 hover:text-gtm-gray-800'
-            } `}
-          >
+          <GTMButton active={mode == 'save'} disabled={mode == 'product'}>
             Messungen speichern
-          </button>
+          </GTMButton>
         </div>
       </Frame>
     </div>

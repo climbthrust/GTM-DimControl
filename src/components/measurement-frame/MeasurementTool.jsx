@@ -10,7 +10,7 @@ import {
 import Notes from '../Notes';
 import GTMImage from '../GTMImage';
 
-const MeasurementTool = ({ tool, connectedDeviceId }) => {
+const MeasurementTool = ({ tool, connectedDeviceId, onChangeTool }) => {
   const BASE_URL = import.meta.env.VITE_BASE_URL;
 
   // --- sicheres Destructuring ---
@@ -50,10 +50,8 @@ const MeasurementTool = ({ tool, connectedDeviceId }) => {
   return (
     <div className='relative w-full h-full text-lg text-gtm-gray-300 rounded-sm border border-gtm-gray-700 flex flex-col items-center gap-2'>
       {tool ? (
-        <div className='flex flex-col h-full w-full items-center justify-between p-2'>
-          <div className='text-xl text-center font-semibold mb-2'>
-            {name || '–'}
-          </div>
+        <div className='flex flex-col h-full w-full items-center justify-between px-2 py-4'>
+          <div className='text-xl text-center  mb-2'>{name || '–'}</div>
 
           {/* Bild (immer Platzhalter zeigen, falls kein Bild) */}
           <div className='h-28 flex items-center justify-center '>
@@ -134,8 +132,10 @@ const MeasurementTool = ({ tool, connectedDeviceId }) => {
 
           <div className='w-full flex items-center justify-end gap-2'>
             <SquarePen
-              className='w-5 h-5 cursor-pointer text-gtm-gray-500 hover:text-gtm-gray-100'
+              className='w-5 h-5 cursor-pointer text-gtm-gray-500 hover:text-gtm-accent-500'
               strokeWidth={1.5}
+              title='Messwerkzeug ändern'
+              onClick={() => onChangeTool?.()}
             />
           </div>
         </div>

@@ -3,6 +3,7 @@ import { invoke } from '@tauri-apps/api/core';
 import ProductData from './components/ProductData';
 import Dimensions from './components/Dimensions';
 import SaveReport from './components/SaveReport';
+import ToolModalProvider from './contexts/ToolModalProvider';
 
 export default function App() {
   const [mode, setMode] = useState('product'); // 'product' | 'dimensions' | 'save'
@@ -48,6 +49,16 @@ export default function App() {
   }
 
   // --------------------------------------------------
+  // Wird vom ToolModalContext aufgerufen, wenn in der DB das Werkzeug geändert wurde
+  function handleToolChanged(dimensionId, toolId) {
+    setDimensions(prev =>
+      prev.map(d =>
+        d.id === dimensionId ? { ...d, measurement_tool_id: toolId } : d
+      )
+    );
+  }
+
+  // --------------------------------------------------
   useEffect(() => {
     loadAllMeasurementTools();
   }, []);
@@ -72,12 +83,17 @@ export default function App() {
 
         {/* Messungen */}
         <div className='flex-grow min-h-0'>
-          <Dimensions
-            dimensions={dimensions}
+          <ToolModalProvider
             measurementTools={measurementTools}
-            highlighted={mode === 'dimensions'}
-            onAllMeasured={() => setMode('save')} // <=== neu
-          />
+            onToolChanged={handleToolChanged}
+          >
+            <Dimensions
+              dimensions={dimensions}
+              measurementTools={measurementTools}
+              highlighted={mode === 'dimensions'}
+              onAllMeasured={() => setMode('save')}
+            />
+          </ToolModalProvider>
         </div>
 
         {/* Bericht */}

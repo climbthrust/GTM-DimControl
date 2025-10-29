@@ -14,12 +14,13 @@ import {
  * Einheitlicher Button für DimControl
  *
  * Props:
- * - icon: 'reset' | 'ok' | 'up' | 'down'
+ * - icon: 'reset' | 'ok' | 'up' | 'down' | 'delete' | 'plus' | 'minus'
  * - active: bool (leuchtet in Accentfarbe, z. B. bei OK-Button aktiv)
  * - disabled: bool (deaktiviert Interaktion)
  * - title: string (Tooltip)
  * - onClick: function
- * - size: number (optional, default = 36)
+ * - size: number (optional, default = 36) → nur für Icon-Buttons
+ * - children: Textinhalt (wenn vorhanden, wird kein Icon gezeigt)
  * - ...rest: alle weiteren Event-Handler (z. B. onMouseDown, onTouchStart)
  */
 export default function GTMButton({
@@ -29,6 +30,7 @@ export default function GTMButton({
   title = '',
   onClick,
   size = 36,
+  children,
   ...rest
 }) {
   const icons = {
@@ -43,12 +45,16 @@ export default function GTMButton({
   const IconComponent = icons[icon] || RotateCcw;
 
   const base =
-    'flex items-center justify-center border rounded-md select-none transition duration-300';
+    'flex items-center justify-center border rounded-md select-none transition duration-300 font-semibold ';
   const stateClass = disabled
-    ? 'border-gtm-gray-700 text-gtm-gray-700'
+    ? 'border-gtm-gray-700 text-gtm-gray-700 cursor-auto'
     : active
-    ? 'bg-gtm-accent-500 hover:bg-gtm-accent-600 text-gtm-gray-900 border-gtm-accent-500'
-    : 'border-gtm-gray-700 text-gtm-gray-700 hover:bg-gtm-accent-600';
+    ? 'bg-gtm-accent-500 hover:bg-gtm-accent-300 hover:shadow-lg text-gtm-gray-900 border-gtm-accent-500 active:translate-x-0.5 active:translate-y-0.5'
+    : 'border-gtm-gray-700 text-gtm-gray-700 hover:bg-gtm-accent-500 hover:text-gtm-gray-900 hover:shadow-lg active:translate-x-0.5 active:translate-y-0.5';
+
+  const textMode = !!children;
+  const textClasses = textMode ? 'text-xl px-6 py-3' : '';
+  const style = textMode ? {} : { width: size, height: size };
 
   return (
     <button
@@ -56,11 +62,11 @@ export default function GTMButton({
       title={title}
       disabled={disabled}
       onClick={onClick}
-      {...rest} // ⬅️ alle weiteren Events (mouse/touch)
-      className={`${base} ${stateClass}`}
-      style={{ width: size, height: size }}
+      {...rest}
+      className={`${base} ${stateClass} ${textClasses}  `}
+      style={style}
     >
-      <IconComponent size={18} />
+      {textMode ? children : <IconComponent size={18} />}
     </button>
   );
 }

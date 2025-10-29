@@ -31,14 +31,14 @@ const DimensionsTable = ({ dimensions, currentIndex, setCurrentIndex }) => {
       <div className='w-full'>
         {/* Kopfzeile */}
 
-        <div className='grid grid-cols-[60px_1fr_90px_70px_70px_60px_90px_40px] text-sm font-semibold rounded-sm text-gtm-gray-600 border border-gtm-gray-700'>
+        <div className='grid grid-cols-[60px_1fr_90px_70px_70px_60px_90px] text-sm font-semibold rounded-sm text-gtm-gray-600 border border-gtm-gray-700'>
           <div className='p-2'>ID</div>
           <div className='p-2'>Bezeichnung</div>
           <div className='p-2 text-right'>−Tol</div>
           <div className='p-2 text-right'>Soll</div>
           <div className='p-2 text-right'>+Tol</div>
           <div className='p-2 text-left'>Einheit</div>
-          <div className='p-2 text-right'>Ist</div>
+          <div className='p-2 text-center'>Ist</div>
         </div>
 
         {/* Zeilen */}
@@ -67,11 +67,11 @@ const DimensionsTable = ({ dimensions, currentIndex, setCurrentIndex }) => {
               : `border-t border-x ${borderColor}`;
 
             // const bg = active
-            //   ? 'bg-gtm-gray-800'
-            //   : 'bg-gtm-gray-800 hover:bg-gtm-gray-700';
+            //   ? 'bg-gtm-accent-800'
+            //   : 'hover:bg-gtm-gray-700';
 
             let valueClass =
-              'text-right text-lg font-semibold text-gtm-gray-400';
+              'text-right text-lg font-semibold text-gtm-gray-500';
             if (status === 'ok')
               valueClass = 'text-right text-lg font-bold text-gtm-ok-400';
             if (status === 'fail')
@@ -86,10 +86,9 @@ const DimensionsTable = ({ dimensions, currentIndex, setCurrentIndex }) => {
               <div
                 key={dim.id}
                 onClick={() => setCurrentIndex(i)}
-                className={`grid grid-cols-[60px_1fr_90px_70px_70px_60px_90px_40px]
-        transition-colors duration-100 cursor-pointer bg-gtm-gray-800 hover:bg-gtm-gray-700 border ${borderClasses}`}
+                className={`grid grid-cols-[60px_1fr_90px_70px_70px_60px_90px] transition-colors duration-100 cursor-pointer border ${borderClasses} hover:bg-gtm-gray-800`}
               >
-                <div className='p-2'>{dim.id}</div>
+                <div className='p-2 text-gtm-gray-500'>{dim.id}</div>
                 <div className='p-2'>{dim.name}</div>
                 <div className='p-2 text-right text-gtm-gray-500'>
                   −{dim.tol_minus.toFixed(displayDecimals)}

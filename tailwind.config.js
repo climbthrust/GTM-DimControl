@@ -35,7 +35,6 @@ export default {
         900: '#1c1c1c',
       },
 
-      
       'gtm-ok': {
         100: '#e0f4e0',
         200: '#b4e1b4',

@@ -57,7 +57,7 @@ const Notes = ({ children, emphasized = true }) => {
 
       {/* Popup mit vollem Text */}
       {showFull && isTruncated && (
-        <div className='absolute text-lg left-0 top-0 z-50 w-full bg-gtm-gray-800 border border-gtm-gray-700 rounded-sm p-2 shadow-lg text-gtm-gray-300 whitespace-pre-wrap'>
+        <div className='absolute text-lg left-0 top-0 z-50 w-full bg-gtm-gray-800 border border-gtm-gray-700 rounded-sm p-2 shadow-xl text-gtm-gray-300 whitespace-pre-wrap'>
           {children}
         </div>
       )}
