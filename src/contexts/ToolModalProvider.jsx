@@ -46,8 +46,11 @@ export default function ToolModalProvider({
         <MeasurementToolModal
           tools={measurementTools}
           dimension={dimension}
-          onSelect={selectTool}
           onClose={closeModal}
+          onUpdated={(dimId, toolId) => {
+            onToolChanged?.(dimId, toolId); // <— ruft App-Funktion auf
+            closeModal();
+          }}
         />
       )}
     </ToolModalContext.Provider>

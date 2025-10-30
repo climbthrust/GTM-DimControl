@@ -1,4 +1,3 @@
-// ToDo: Measurement Tool wird zu groß angezeigt und verschiebt StatusBar
 import React from 'react';
 import {
   Bluetooth,
@@ -7,11 +6,17 @@ import {
   AlertCircle,
   SquarePen,
 } from 'lucide-react';
+import { useToolModal } from '../../contexts/ToolModalContext'; // <=== neu
 import Notes from '../Notes';
 import GTMImage from '../GTMImage';
 
-const MeasurementTool = ({ tool, connectedDeviceId, onChangeTool }) => {
+export default function MeasurementTool({
+  tool,
+  connectedDeviceId,
+  dimension,
+}) {
   const BASE_URL = import.meta.env.VITE_BASE_URL;
+  const { openModal } = useToolModal(); // <=== neu
 
   // --- sicheres Destructuring ---
   const {
@@ -51,10 +56,10 @@ const MeasurementTool = ({ tool, connectedDeviceId, onChangeTool }) => {
     <div className='relative w-full h-full text-lg text-gtm-gray-300 rounded-sm border border-gtm-gray-700 flex flex-col items-center gap-2'>
       {tool ? (
         <div className='flex flex-col h-full w-full items-center justify-between px-2 py-4'>
-          <div className='text-xl text-center  mb-2'>{name || '–'}</div>
+          <div className='text-xl text-center mb-2'>{name || '–'}</div>
 
-          {/* Bild (immer Platzhalter zeigen, falls kein Bild) */}
-          <div className='h-28 flex items-center justify-center '>
+          {/* Bild */}
+          <div className='h-28 flex items-center justify-center'>
             {imgUrl ? (
               <img
                 src={imgUrl}
@@ -73,75 +78,71 @@ const MeasurementTool = ({ tool, connectedDeviceId, onChangeTool }) => {
       )}
 
       {/* StatusBar */}
-      <div className=' bg-gtm-gray-800 w-full p-2 border-t border-gtm-gray-700'>
-        <div className='flex items-center justify-between gap-2 w-full'>
-          {tool && (
-            <div className='flex gap-2'>
-              {/* Bluetooth Status */}
-              <div className='flex items-center gap-2'>
-                {btStatus === 'correct' && (
-                  <Bluetooth
-                    className='w-5 h-5 rounded-full text-gtm-gray-500 hover:text-gtm-gray-300 hover:bg-gtm-blue-500'
-                    strokeWidth={1.5}
-                  />
-                )}
-                {btStatus === 'wrong' && (
-                  <BluetoothOff
-                    className='w-5 h-5 bg-gtm-fail-600 text-gtm-gray-300 rounded-full border border-gtm-gray-300'
-                    strokeWidth={1.5}
-                  />
-                )}
-                {btStatus === 'none' && (
-                  <BluetoothOff
-                    className='w-5 h-5 bg-gtm-fail-600 text-gtm-gray-300 rounded-full border border-gtm-gray-300'
-                    strokeWidth={1.5}
-                  />
-                )}
-              </div>
+      {dimension.id !== null && (
+        <div className='bg-gtm-gray-800 w-full p-2 border-t border-gtm-gray-700'>
+          <div className='flex items-center justify-between gap-2 w-full'>
+            {tool && (
+              <div className='flex gap-2'>
+                {/* Bluetooth Status */}
+                <div className='flex items-center gap-2'>
+                  {btStatus === 'correct' && (
+                    <Bluetooth
+                      className='w-5 h-5 rounded-full text-gtm-gray-500 hover:text-gtm-gray-300 hover:bg-gtm-blue-500'
+                      strokeWidth={1.5}
+                    />
+                  )}
+                  {btStatus === 'wrong' && (
+                    <BluetoothOff
+                      className='w-5 h-5 bg-gtm-fail-600 text-gtm-gray-300 rounded-full border border-gtm-gray-300'
+                      strokeWidth={1.5}
+                    />
+                  )}
+                  {btStatus === 'none' && (
+                    <BluetoothOff
+                      className='w-5 h-5 bg-gtm-fail-600 text-gtm-gray-300 rounded-full border border-gtm-gray-300'
+                      strokeWidth={1.5}
+                    />
+                  )}
+                </div>
 
-              {/* Kalibrierung */}
-              <div
-                className='flex items-center gap-2 '
-                title={
-                  valid_until
-                    ? `Kalibrierung gültig bis ${valid_until}`
-                    : 'Kalibrierung abgelaufen'
-                }
-              >
-                {isValid ? (
-                  <CheckCircle
-                    className='w-5 h-5 rounded-full text-gtm-gray-500 hover:text-gtm-gray-300 hover:bg-gtm-ok-600 '
-                    strokeWidth={1.5}
-                  />
-                ) : (
-                  <AlertCircle
-                    className='w-5 h-5 bg-gtm-fail-500 text-gtm-gray-300'
-                    strokeWidth={1.5}
-                  />
-                )}
-                {/* <span
-                className={`font-medium text-sm ${
-                  isValid ? 'text-gtm-gray-500' : 'text-gtm-fail-500'
-                }`}
-              >
-                {valid_until || '–'}
-              </span> */}
+                {/* Kalibrierung */}
+                <div
+                  className='flex items-center gap-2'
+                  title={
+                    valid_until
+                      ? `Kalibrierung gültig bis ${valid_until}`
+                      : 'Kalibrierung abgelaufen'
+                  }
+                >
+                  {isValid ? (
+                    <CheckCircle
+                      className='w-5 h-5 rounded-full text-gtm-gray-500 hover:text-gtm-gray-300 hover:bg-gtm-ok-600'
+                      strokeWidth={1.5}
+                    />
+                  ) : (
+                    <AlertCircle
+                      className='w-5 h-5 bg-gtm-fail-500 text-gtm-gray-300'
+                      strokeWidth={1.5}
+                    />
+                  )}
+                </div>
               </div>
+            )}
+
+            {/* Tool ändern */}
+            <div className='w-full flex items-center justify-end gap-2'>
+              <SquarePen
+                className='w-5 h-5 cursor-pointer text-gtm-gray-500 hover:text-gtm-accent-500'
+                strokeWidth={1.5}
+                title='Messwerkzeug ändern'
+                onClick={() => {
+                  openModal(dimension);
+                }}
+              />
             </div>
-          )}
-
-          <div className='w-full flex items-center justify-end gap-2'>
-            <SquarePen
-              className='w-5 h-5 cursor-pointer text-gtm-gray-500 hover:text-gtm-accent-500'
-              strokeWidth={1.5}
-              title='Messwerkzeug ändern'
-              onClick={() => onChangeTool?.()}
-            />
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
-};
-
-export default MeasurementTool;
+}

@@ -7,6 +7,7 @@ import {
   X,
   Plus,
   Minus,
+  Unlink2,
 } from 'lucide-react';
 
 /**
@@ -41,6 +42,7 @@ export default function GTMButton({
     delete: X,
     plus: Plus,
     minus: Minus,
+    unlink: Unlink2,
   };
   const IconComponent = icons[icon] || RotateCcw;
 

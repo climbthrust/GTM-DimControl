@@ -199,3 +199,19 @@ pub fn get_product_by_serial(serial_number: String) -> Result<Product, String> {
 
     Ok(product)
 }
+
+#[tauri::command]
+pub fn update_dimension_tool(dimension_id: i32, tool_id: i32) -> Result<(), String> {
+    let conn = DB_CONN.lock().unwrap();
+
+    conn.execute(
+        "UPDATE dimensions 
+         SET measurement_tool_id = ?1, 
+             updated_at = datetime('now', 'localtime') 
+         WHERE id = ?2;",
+        (tool_id, dimension_id),
+    )
+    .map_err(|e| format!("Fehler beim Aktualisieren des Messwerkzeugs: {}", e))?;
+
+    Ok(())
+}

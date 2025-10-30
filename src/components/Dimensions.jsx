@@ -8,7 +8,6 @@ export default function Dimensions({
   measurementTools,
   highlighted,
   onAllMeasured,
-  openToolModal,
 }) {
   const [dimensionsWithValues, setDimensionsWithValues] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -82,7 +81,6 @@ export default function Dimensions({
                 onSave={handleSaveValue}
                 onNext={nextRow}
                 measurementTools={measurementTools}
-                openToolModal={openToolModal}
               />
             </div>
 
