@@ -201,7 +201,7 @@ pub fn get_product_by_serial(serial_number: String) -> Result<Product, String> {
 }
 
 #[tauri::command]
-pub fn update_dimension_tool(dimension_id: i32, tool_id: i32) -> Result<(), String> {
+pub fn update_dimension_tool(dimension_id: i32, tool_id: Option<i32>) -> Result<(), String> {
     let conn = DB_CONN.lock().unwrap();
 
     conn.execute(

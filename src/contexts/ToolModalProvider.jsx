@@ -49,7 +49,7 @@ export default function ToolModalProvider({
           onClose={closeModal}
           onUpdated={(dimId, toolId) => {
             onToolChanged?.(dimId, toolId); // <— ruft App-Funktion auf
-            closeModal();
+            // closeModal();
           }}
         />
       )}

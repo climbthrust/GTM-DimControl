@@ -20,11 +20,8 @@ export default function MeasurementToolModal({
   const BASE_URL = import.meta.env.VITE_BASE_URL;
 
   const handleConfirm = async () => {
-    if (
-      selectedToolId === null ||
-      selectedToolId === dimension.measurement_tool_id
-    )
-      return onClose(); // nichts geändert
+    // nichts geändert → keine Aktion
+    if (selectedToolId === dimension.measurement_tool_id) return;
 
     try {
       setLoading(true);
@@ -32,7 +29,7 @@ export default function MeasurementToolModal({
 
       await invoke('update_dimension_tool', {
         dimensionId: dimension.id,
-        toolId: selectedToolId,
+        toolId: selectedToolId, // kann auch null sein!
       });
 
       onUpdated?.(dimension.id, selectedToolId);
@@ -43,6 +40,11 @@ export default function MeasurementToolModal({
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleUnlink = () => {
+    // Nur Zustand ändern – noch nicht persistieren
+    setSelectedToolId(null);
   };
 
   return (
@@ -90,7 +92,9 @@ export default function MeasurementToolModal({
               return (
                 <tr
                   key={t.id}
-                  className='cursor-pointer transition-colors  border-b border-gtm-gray-700 hover:bg-gtm-gray-800'
+                  className={`cursor-pointer transition-colors  border-b border-gtm-gray-700 hover:bg-gtm-gray-800 ${
+                    isSelected && 'outline outline-1 outline-gtm-accent-500'
+                  }`}
                   onClick={() => setSelectedToolId(t.id)}
                 >
                   <td className='py-2 px-3'>
@@ -145,15 +149,15 @@ export default function MeasurementToolModal({
         <div className='flex justify-between mt-6 gap-3'>
           <GTMButton
             icon='unlink'
-            title='Abbrechen'
-            onClick={onClose}
-            disabled={loading}
+            title='Verbindung lösen'
+            onClick={handleUnlink}
+            disabled={loading || selectedToolId === null}
           />
           <GTMButton
             icon='ok'
             title='Übernehmen'
-            active={true}
-            disabled={loading || selectedToolId === null}
+            active={selectedToolId !== dimension.measurement_tool_id}
+            disabled={loading}
             onClick={handleConfirm}
           />
         </div>
